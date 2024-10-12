@@ -249,27 +249,27 @@ if ($isLoggedIn) {
             <label for="editLocation">Location:</label>
             <div class="col-sm-6 mb-3">
             <label class="form-label">Region <span style="color:red;">*</span></label>
-            <select name="editregion" id="region"></select>
+            <select name="editregion" class="region" id="region"></select>
             <input type="text" class="editregion" name="editregion" id="region-text" required>
             </div>
         <div class="col-sm-6 mb-3">
             <label class="form-label">Province *</label>
-            <select name="eprovince" class="form-control form-control-md" id="province"></select>
+            <select name="eprovince" class="province" id="province"></select>
             <input type="hidden" class="form-control form-control-md" name="editprovince" id="province-text" required>
         </div>
         <div class="col-sm-6 mb-3">
             <label class="form-label">City / Municipality *</label>
-            <select name="ecity" class="form-control form-control-md" id="city"></select>
+            <select name="ecity"  class="city" id="city"></select>
             <input type="hidden" class="form-control form-control-md" name="editcity" id="city-text" required>
         </div>
         <div class="col-sm-6 mb-3">
             <label class="form-label">Barangay *</label>
-            <select name="ebarangay" class="form-control form-control-md" id="barangay"></select>
+            <select name="ebarangay" class="barangay" id="barangay"></select>
             <input type="hidden" class="form-control form-control-md" name="editbarangay" id="barangay-text" required>
         </div>
         <div class="col-md-6 mb-3">
             <label for="street-text" class="form-label">Street (Optional)</label>
-            <input type="text" class="form-control form-control-md" name="editstreet" id="street-text">
+            <input type="text" class="street" name="editstreet" id="street-text">
         </div>
 
             <label for="editPrice">Price:</label>

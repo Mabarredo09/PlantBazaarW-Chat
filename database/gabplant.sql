@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 01, 2024 at 03:50 PM
+-- Generation Time: Oct 12, 2024 at 07:55 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `plantbazaardb`
+-- Database: `gabplant`
 --
 
 -- --------------------------------------------------------
@@ -45,9 +45,58 @@ CREATE TABLE `chats` (
   `senderId` int(11) NOT NULL,
   `receiverId` int(11) NOT NULL,
   `messageContent` text NOT NULL,
-  `messageFiles` varchar(128) NOT NULL,
   `messageDate` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `messages`
+--
+
+CREATE TABLE `messages` (
+  `id` int(11) NOT NULL,
+  `sender_id` int(11) NOT NULL,
+  `receiver_id` int(11) NOT NULL,
+  `message` text NOT NULL,
+  `file_path` varchar(255) DEFAULT NULL,
+  `reply_to` int(11) DEFAULT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT current_timestamp(),
+  `status` tinyint(4) DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
+-- Dumping data for table `messages`
+--
+
+INSERT INTO `messages` (`id`, `sender_id`, `receiver_id`, `message`, `file_path`, `reply_to`, `timestamp`, `status`) VALUES
+(564, 24, 18, 'Uyy', NULL, NULL, '2024-10-11 02:03:42', 1),
+(565, 24, 18, 'Vakit?', NULL, NULL, '2024-10-11 02:04:56', 1),
+(566, 18, 24, 'utot', NULL, NULL, '2024-10-11 02:05:03', 1),
+(567, 18, 24, 'bakit ganun sayang ang tatoo', NULL, 566, '2024-10-11 02:59:14', 0),
+(568, 59, 1, 'uy', NULL, NULL, '2024-10-11 04:27:20', 1),
+(569, 59, 1, 'boss?', NULL, 568, '2024-10-11 04:27:27', 1),
+(570, 59, 41, 'bossing', NULL, NULL, '2024-10-11 04:27:45', 1),
+(571, 59, 41, 'oy', NULL, 570, '2024-10-11 04:28:18', 1),
+(572, 41, 1, 'Hello Boss', NULL, NULL, '2024-10-11 17:40:11', 1),
+(573, 41, 1, 'Ey wats app', NULL, NULL, '2024-10-11 17:40:21', 1),
+(574, 1, 41, 'Ok lang naman', NULL, NULL, '2024-10-11 17:41:38', 1),
+(575, 41, 1, 'Buti naman', NULL, NULL, '2024-10-11 17:41:47', 1),
+(576, 41, 41, 'Hey po', NULL, NULL, '2024-10-12 06:03:07', 0),
+(577, 41, 1, 'Hey po', NULL, NULL, '2024-10-12 06:04:21', 0),
+(578, 41, 59, ' asd', NULL, NULL, '2024-10-12 06:04:46', 0),
+(579, 41, 1, 'asd', NULL, NULL, '2024-10-12 06:04:50', 0),
+(580, 41, 41, 'asd', NULL, NULL, '2024-10-12 07:47:36', 0),
+(581, 41, 41, 'pogi', NULL, NULL, '2024-10-12 07:47:39', 0),
+(582, 41, 41, 'ey', NULL, NULL, '2024-10-12 07:47:44', 0),
+(583, 41, 1, 'psst', NULL, 575, '2024-10-12 08:44:13', 0),
+(584, 41, 1, 'oy', NULL, NULL, '2024-10-12 08:44:18', 0),
+(585, 41, 1, 'idol', NULL, NULL, '2024-10-12 08:44:22', 0),
+(586, 41, 1, 'asd', NULL, NULL, '2024-10-12 08:44:26', 0),
+(587, 41, 1, 'ano balita', NULL, 584, '2024-10-12 08:47:50', 0),
+(588, 41, 1, 'asd', NULL, 585, '2024-10-12 09:27:07', 0),
+(589, 41, 1, 'bossing', NULL, 575, '2024-10-12 09:27:25', 0),
+(590, 41, 1, 'asd', NULL, NULL, '2024-10-12 09:27:35', 0);
 
 -- --------------------------------------------------------
 
@@ -67,7 +116,12 @@ CREATE TABLE `product` (
   `plantcategories` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `details` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `location` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `price` int(11) NOT NULL,
+  `region` varchar(128) NOT NULL,
+  `province` varchar(128) NOT NULL,
+  `city` varchar(50) NOT NULL,
+  `barangay` varchar(128) NOT NULL,
+  `street` varchar(128) DEFAULT NULL,
+  `price` float(11,2) NOT NULL,
   `createdAt` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `updatedAt` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
@@ -76,10 +130,10 @@ CREATE TABLE `product` (
 -- Dumping data for table `product`
 --
 
-INSERT INTO `product` (`plantid`, `added_by`, `plantname`, `img1`, `img2`, `img3`, `plantColor`, `plantSize`, `plantcategories`, `details`, `location`, `price`, `createdAt`, `updatedAt`) VALUES
-(39, 2, 'Succulent', 'succulent.jpg', '', '', 'Green', '6cm', 'Succulent', 'Easy to maintain plant', 'Gapan', 200, '2024-09-18 15:01:52', '2024-09-18 15:01:52'),
-(57, 2, 'Sample Plant 2', '1726340409519.jpg', 'default-image.jpg', 'default-image.jpg', 'asd', '4inch', 'Cactus', 'qwe', 'Hello po', 111, '2024-09-29 09:58:36', '2024-09-29 09:58:36'),
-(66, 3, 'What is ap', 'Screenshot 2024-09-26 221933.png', 'Screenshot 2024-09-27 130308.png', 'default-image.jpg', 'Bayolet', 'Malaki', 'Cactus', 'Etong halaman na ito ay aking pinaglumaan na halaman', 'Caloocan', 200, '2024-10-01 13:48:50', '2024-10-01 13:48:50');
+INSERT INTO `product` (`plantid`, `added_by`, `plantname`, `img1`, `img2`, `img3`, `plantColor`, `plantSize`, `plantcategories`, `details`, `location`, `region`, `province`, `city`, `barangay`, `street`, `price`, `createdAt`, `updatedAt`) VALUES
+(39, 2, 'Succulent', 'succulent.jpg', '', '', 'Green', '6cm', 'Succulent', 'Easy to maintain plant', 'Gapan', '', '', '', '', NULL, 200.00, '2024-09-18 15:01:52', '2024-09-18 15:01:52'),
+(46, 3, 'Euphorbia obesa', '461861999_900319622198902_4781648371440441819_n.jpg', '461795555_900319615532236_6193450879555062943_n.jpg', '461875136_900319612198903_6003683218236318191_n.jpg', '', 'Juvenile', 'outdoor', 'Euphorbia obesa can grow to 20 cm in height with a diameter of 9 cm. It is a single-stemmed, unbranched, firm-bodied plant. The stem is usually 8-angled and grooved, subglobose (almost spherical) in shape, elongating and becoming cylindric as it gets older. Younger plants have a rounded sea urchin-like shape.', '', 'Region III (Central Luzon)', 'Nueva Ecija', 'Cabanatuan City', 'Campo Tinio', 'Near Waltermart', 800.00, '2024-10-12 16:50:16', '2024-10-12 16:50:16'),
+(47, 3, 'Uebelmannia pectinifera', '461944679_901099365454261_1511506421590284050_n.jpg', '461953559_901099362120928_417283808325182436_n.jpg', '461934857_901099372120927_4382470582676685201_n.jpg', '', 'Adult', 'Indoor', 'Uebelmannia pectiniferaSN|14312]]SN|14312]] is a solitary cactus 10-50(-100) cm tall. It is a multiform species and very variable in habitat, comprising a complex of numerous local forms, where each form is linked to others by populations of plants with intermediate characteristics.', '', 'Region III (Central Luzon)', 'Nueva Ecija', 'Palayan City (Capital)', 'Sapang Buho', 'Malapit sa 7/11', 1600.00, '2024-10-12 17:21:45', '2024-10-12 17:21:45');
 
 -- --------------------------------------------------------
 
@@ -89,7 +143,6 @@ INSERT INTO `product` (`plantid`, `added_by`, `plantname`, `img1`, `img2`, `img3
 
 CREATE TABLE `product_archive` (
   `archiveID` int(11) NOT NULL,
-  `plantid` int(11) DEFAULT NULL,
   `postedBy` varchar(50) NOT NULL,
   `postPlantName` varchar(50) NOT NULL,
   `img1` varchar(128) NOT NULL,
@@ -97,7 +150,6 @@ CREATE TABLE `product_archive` (
   `img3` varchar(128) NOT NULL,
   `plantSize` varchar(20) NOT NULL,
   `plantCategories` varchar(40) NOT NULL,
-  `plantColor` varchar(128) NOT NULL,
   `details` varchar(128) NOT NULL,
   `location` int(70) NOT NULL,
   `price` int(10) NOT NULL,
@@ -109,17 +161,13 @@ CREATE TABLE `product_archive` (
 -- Dumping data for table `product_archive`
 --
 
-INSERT INTO `product_archive` (`archiveID`, `plantid`, `postedBy`, `postPlantName`, `img1`, `img2`, `img3`, `plantSize`, `plantCategories`, `plantColor`, `details`, `location`, `price`, `createdAt`, `updatedAt`) VALUES
-(1, 40, '3', 'Cube', 'Screenshot 2024-06-11 010053.png', 'Screenshot 2024-08-17 094044.png', 'Screenshot 2024-08-17 094044.png', '4inch', 'Cactus', 'Violet', '', 0, 600, '2024-09-30 14:11:10', '2024-09-30 14:11:10'),
-(2, 41, '', 'Halimaw', '1.png\r\n', '', '', '2 Meters', 'Halamang Gamot', 'White', '', 0, 100, '2024-09-30 14:13:31', '2024-09-30 14:13:31'),
-(3, 54, 'maranathabarredo@gmail.com', 'asd', 'Screenshot 2024-06-11 010053.png', 'default-image.jpg', 'default-image.jpg', '4inch', 'Cactus', 'Violet', '', 0, 123, '2024-09-30 14:14:00', '2024-09-30 14:14:00'),
-(4, 60, 'maranathabarredo@gmail.com', 'Korikong', '1722610764706.jpeg', 'default-image.jpg', 'default-image.jpg', '4inch', 'Tinola', 'Violet', '', 0, 120, '2024-09-30 15:03:43', '2024-09-30 15:03:43'),
-(5, 61, 'maranathabarredo@gmail.com', 'Wala lang 123', 'Javascript Workshop.jpg', 'default-image.jpg', 'default-image.jpg', '123', 'Tinola', 'Violet', '', 0, 123, '2024-09-30 15:05:51', '2024-09-30 15:05:51'),
-(6, 55, 'maranathabarredo@gmail.com', 'Kangkong', 'Nike Banner.jpg', 'default-image.jpg', 'default-image.jpg', '4inch', 'Tinola', 'Violet', '', 0, 666, '2024-09-30 15:06:19', '2024-09-30 15:06:19'),
-(7, 62, 'maranathabarredo@gmail.com', 'Halaman na Kulay Green', '1720091745842.jpeg', '1717595108231.jpg', '1717595108231.jpg', 'Malaki', 'Kangkong', 'Bayolet', '', 0, 200, '2024-09-30 15:09:38', '2024-09-30 15:09:38'),
-(8, 63, 'maranathabarredo@gmail.com', 'Sigel', 'Screenshot 2024-08-27 203154.png', 'default-image.jpg', 'default-image.jpg', '4inch', 'Tinola', 'asd', '', 0, 121, '2024-09-30 15:12:59', '2024-09-30 15:12:59'),
-(9, 64, 'maranathabarredo@gmail.com', 'Wala lang 123', '1718904635480.jpg', 'default-image.jpg', 'default-image.jpg', '4inch', 'Cactus', 'Violet', '', 0, 123, '2024-09-30 15:16:43', '2024-09-30 15:16:43'),
-(10, 65, 'maranathabarredo@gmail.com', 'Kangkong Chips', '1.png', '2.png', '3.png', 'Malaki', 'Kangkong', 'Bayolet', '', 0, 220, '2024-09-30 17:52:54', '2024-09-30 17:52:54');
+INSERT INTO `product_archive` (`archiveID`, `postedBy`, `postPlantName`, `img1`, `img2`, `img3`, `plantSize`, `plantCategories`, `details`, `location`, `price`, `createdAt`, `updatedAt`) VALUES
+(40, 'maranathabarredo@gmail.com', 'Cactus', 'cactus.jpg', 'Screenshot 2024-10-01 200917.png', 'Screenshot 2024-10-01 222606.png', 'Seedling', 'Cacti', '', 0, 100, '2024-10-12 16:28:58', '2024-10-12 16:28:58'),
+(41, 'maranathabarredo@gmail.com', 'Kangkong', 'Screenshot 2024-10-05 193948.png', '', '', '1 meter', 'Veggies', '', 0, 200, '2024-10-12 16:29:00', '2024-10-12 16:29:00'),
+(42, 'maranathabarredo@gmail.com', 'Munggo', 'sold.jpg', 'default-image.jpg', 'default-image.jpg', 'Adult', 'Outdoor', '', 0, 100, '2024-10-12 16:29:02', '2024-10-12 16:29:02'),
+(43, 'maranathabarredo@gmail.com', 'asd', 'halam.jpg', 'default-image.jpg', 'default-image.jpg', 'Malaki', 'Tinola', '', 0, 123, '2024-10-12 16:29:03', '2024-10-12 16:29:03'),
+(44, 'maranathabarredo@gmail.com', 'Wala lang', 'Screenshot 2024-10-06 180127.png', 'default-image.jpg', 'default-image.jpg', 'Adult', 'Climbers', '', 0, 123, '2024-10-12 16:29:05', '2024-10-12 16:29:05'),
+(45, 'maranathabarredo@gmail.com', 'Malunggay', '3.png', 'default-image.jpg', 'default-image.jpg', 'Seedling', 'Indoor', '', 0, 1232, '2024-10-12 16:29:06', '2024-10-12 16:29:06');
 
 -- --------------------------------------------------------
 
@@ -187,10 +235,19 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `proflePicture`, `firstname`, `lastname`, `email`, `gender`, `phoneNumber`, `address`, `password`, `status`) VALUES
 (1, 'eugenevanlinsangan1204@gmail.com.jpg', 'Juan', 'DelaCruz', 'eugenevanlinsangan1204@gmail.com', 'male', 91234351, 'Gapan', 'Test123@', 1),
-(41, 'maranathabarredo@gmail.com.png', 'Maranatha', 'Barredo', 'maranathabarredo@gmail.com', 'male', 974236516, 'Papaya', 'Test123@', 1),
+(41, 'maranathabarredo@gmail.com.png', 'Maranatha', 'Barredo', 'maranathabarredo@gmail.com', 'male', 974236516, 'Gen Tinio', 'Test123@', 1),
 (48, '2.png', 'qwe', 'qwe', 'mbarredo2n.neust@gmail.com', 'Male', 123, 'qwe', 'qwe', 0),
 (49, 'wadom93936_daypey_com.png', 'Wadow', 'Doe', 'wadom93936@daypey.com', 'Male', 123, 'qwe', '$2y$10$u/5.tT1u86/PS7aFWhDVz.L1CZ7ZuueVul0TPmtCjeOCF32ITx9Rm', 0),
-(50, 'maranathabarredo_yahoo_com.png', 'Maranatha', 'Asd', 'maranathabarredo@yahoo.com', 'Male', 123131, 'Malaysia', '$2y$10$ILGRd.Qd2cz.kx.4CqZSC.pPsilssMFrk4sXceLKg7.m.M1WEyTbi', 0);
+(50, 'dejesusjoel731_gmail_com.png', 'Joel', 'De jesus', 'dejesusjoel731@gmail.com', 'Male', 9392925229, 'Poblacion East 2, Aliaga', '$2y$10$skYEmTatLJb9dqbs4u7QKek1.ce8o3E0OXfP4/YrnwW2NFWexDGHS', 0),
+(51, 'olpottado205_gmail_com.png', 'Joel', 'De jesus', 'olpottado205@gmail.com', 'Male', 9882215277, 'Poblacion East 2, Aliaga', '$2y$10$fhav0V3QxWCllQWM7HDNNuF31esnXaAWx23LBMNR/FQqLDSLFJOq.', 0),
+(52, '', 'Joel', 'De jesus', 'hatdog@gmail.com', 'gg', 9392925229, 'Poblacion East 2, Aliaga', '$2y$10$kqhldvFsXVcFkstDraB84..raG0t2twk9Lczs7pdcjR2Lg4bi7EY6', 0),
+(53, 'gab_gmail_com.jpg', 'Gab', 'Gab', 'gab@gmail.com', 'Male', 9392925229, 'Gen Tinio', '$2y$10$ewu4rqhwpjPEdZMjfWpqBe1FfWs1yYeddkuk6uLvyTOnMDZpy4wdq', 0),
+(54, '', 'Gab', 'Gab', 'gab123@gmail.com', 'gg', 9392925229, 'Poblacion East 2, Aliaga', 'GG', 0),
+(55, 'GB_GMAIL_com.jpg', 'Gab', 'Gab', 'GB@GMAIL.com', 'Male', 9392925229, 'Gen Tinio', '$2y$10$qPFrPtmYYlFObD8TIErFseJt7GoHDwQ0GoXLnkVDaI70u/nbj5FDi', 0),
+(56, 'Mark_olpot_yahoo_com.jpg', 'Gab', 'Gab', 'Mark_olpot@yahoo.com', 'Male', 9392925229, 'Gen Tinio', '$2y$10$QWDrYW.Ky2qSusj56hkfhOwoQoRobnTdGu5PHnrv73hvbjyb0oNoW', 0),
+(57, '', 'Gab', 'Gab', 'gg@gmail.com', 'gg', 9882215277, 'Poblacion East 2, Aliaga', '$2y$10$QPUzjsuvxqIqMAoShvS9yOlgBlLxK0DRz2I89vTbmf938QIRgybXK', 0),
+(58, NULL, '', '', 'gh@gmail.com', '', 0, '', 'gg', 0),
+(59, '', 'Gab', 'God', 'azarik@gmail.com', 'gab', 45454, 'gab', '$2y$10$7j4V1EEXorFOloQtFklkZeLaiaFpIEfWHKL/AHwgOYcjJ0xxUOSY6', 0);
 
 --
 -- Indexes for dumped tables
@@ -209,6 +266,12 @@ ALTER TABLE `chats`
   ADD PRIMARY KEY (`messageId`),
   ADD KEY `senderId` (`senderId`,`receiverId`),
   ADD KEY `receiverId` (`receiverId`);
+
+--
+-- Indexes for table `messages`
+--
+ALTER TABLE `messages`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `product`
@@ -261,16 +324,22 @@ ALTER TABLE `chats`
   MODIFY `messageId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `messages`
+--
+ALTER TABLE `messages`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=591;
+
+--
 -- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
-  MODIFY `plantid` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
+  MODIFY `plantid` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
 
 --
 -- AUTO_INCREMENT for table `product_archive`
 --
 ALTER TABLE `product_archive`
-  MODIFY `archiveID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `archiveID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 
 --
 -- AUTO_INCREMENT for table `sellers`
@@ -288,7 +357,7 @@ ALTER TABLE `seller_applicant`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
 
 --
 -- Constraints for dumped tables
