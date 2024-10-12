@@ -1,855 +1,508 @@
-<?php
-include 'conn.php';
+<?php 
 session_start();
-
-// Check if a user is logged in
-$isLoggedIn = isset($_SESSION['email']) && !empty($_SESSION['email']);
-$profilePic = ''; // Placeholder for the profile picture
-$isSeller = false; // Flag to check if the user is a seller
-
-if ($isLoggedIn) {
-    $email = $_SESSION['email'];
-
-    // Query to get the profile picture from the database
-    $query = "SELECT id, proflePicture, firstname, lastname FROM users WHERE email = '$email'";
-    $result = mysqli_query($conn, $query);
-
-    if ($result && mysqli_num_rows($result) > 0) {
-        $user = mysqli_fetch_assoc($result);
-        $profilePic = $user['proflePicture'];  // Assuming you store the path to the profile picture
-        $userId = $user['id'];
-        $firstname = $user['firstname'];
-        $lastname = $user['lastname'];
-    }
-
-    // If no profile picture is available, use a default image
-    // if (empty($profilePic)) {
-    //     $profilePic = 'plant-bazaar.jpg';  // Path to a default profile picture
-    // }
-
-    // Query to check if the user is a seller
-    $sellerQuery = "SELECT seller_id FROM sellers WHERE user_id = '$userId'";
-    $sellerResult = mysqli_query($conn, $sellerQuery);
-
-    if ($sellerResult && mysqli_num_rows($sellerResult) > 0) {
-        $isSeller = true; // User is a seller
-    }
+include "conn.php";
+if(isset($_SESSION['email'])){
+    $username = $_SESSION['email'];
+    $user = $_SESSION['user_id'];
+}else{
+    header("location: login.php");
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
-    <script src="jquery.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4/dist/css/splide.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4/dist/js/splide.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-    <script src="node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
-    
-    <title>Plant-Bazaar</title>
+    <title>Document</title>
+    <link rel="stylesheet" href="chat.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
 </head>
+<body>
+    <div class="container">
+    <!-- para sa sounds pag send  -->
+    <audio style="display: none;" id="send-sound" src="sounds/send-sound.mp3" preload="auto"></audio>
+    <audio style="display: none;" id="receive-sound" src="sounds/Notification-Sound.mp3" preload="auto"></audio>
 
 
-    <div class="header">
-        <nav class="navigation">
-            <div class="logo">
-                <span class="plant">PLANT</span>
-                <p class="bazaar">-BAZAAR</p>
-                <i class="fa-solid fa-spa"></i>
-            </div>
-            <div class="nav1">
-                <a href="#" id="home">Home</a>
-                <a href="#">Plants Categories</a>
-                <a href="#" id="about">About</a>
-                <a href="#">Contact Us</a>
-                <?php if ($isLoggedIn): ?>
-                <a href="#" id="chats">Chats</a>
-                <?php endif;?>
-            </div>
-            <div class="login-signup">
-                <?php if ($isLoggedIn): ?>
-                    <!-- Show Profile Picture if user is logged in -->
-                    <a href="#" class="profile-link">
-                        <img src="ProfilePictures/<?php echo $profilePic; ?>" alt="Profile" class="profile-pic">
-                    </a>
-                    
-                <?php else: ?>
-                    <!-- Show Login button if user is not logged in -->
-                    <a href="#" id="loginLink">Login</a>
-                <?php endif; ?>
-            </div>
-        </nav>
-        <div class="hamburger">
-            <i class="fas fa-bars"></i>
+        <!-- Fullscreen Image Overlay -->
+         <!-- para sa picture  -->
+    <div id="fullscreen-overlay" style="display: none;">
+        <span id="close-overlay" style="cursor: pointer; color: white; position: absolute; top: 10px; right: 20px; font-size: 24px;">&times;</span>
+        <img id="fullscreen-image" src="" alt="Full Screen" style="max-width: 100%; max-height: 100%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+    </div>
+
+        <div class="user-container">
+            <h2 class="message-header" >Messages <button style="display: none;" id="refresh-btn" class="refresh-btn" >refresh</button></h2>
+            <hr>
+            <!-- dito yung mga users -->
+            <div class="user-list"></div>
         </div>
-    </div>
+        <div class="chat-container">
+            <div class="reciepient-header">
+                <!-- static muna pero dito display ng username ng i memesage -->
+                <h1 class="username" ></h1>
+            </div>
+            <!-- dito yung mga chats  -->
+            <div class="message-container" id="message-container">
+              
 
-    <div class="dropdown-menu">
-        <?php if ($isLoggedIn): ?>
-            <a href="#" class="profile-link">
-                        <img src="ProfilePictures/<?php echo $profilePic; ?>" alt="Profile" class="profile-pic">
-            </a>
-            <a><p>Hello, <?php echo $firstname . ' ' . $lastname; ?></p> </a>
-        <?php endif;?>
-        <a href="#" id="home1">Home</a>
-        <a href="#" id="about1">About</a>
-        <a href="#">Contact</a>
-        <?php if ($isLoggedIn): ?>
-            <a href="#" id="logoutLink">Logout</a>
-        <?php else:?>
-        <a href="#" id="loginLink1">Login</a>
-        <?php endif;?>
-    </div>
+            </div>
 
-    <div class="dropdown-profile">
-   <?php
-    if ($isLoggedIn) {
-        echo'<p>Hello, ' . $firstname . ' ' . $lastname . '</p>';
-    }?>
-    <?php if ($isSeller): ?>
-        <a href="Seller/seller_dashboard">Seller Dashboard</a> <!-- Change the link as needed for the seller's dashboard -->
-    <?php else: ?>
-        <a href="#">Be A Seller</a> <!-- Link to becoming a seller -->
-    <?php endif; ?>
-    <a href="editprofile.php">Edit Profile</a>
-    <a href="#" id="logoutLink">Logout</a>
-</div>
+                    <!-- dito display para alam yung message ng rereplyan mo  -->
+            <div class="reply-indicator">
+                <p class="reply-message" style="display: none;">
+                    <strong>Replying to: </strong>
+                    <span class="reply-text"></span>
+                    <span class="close-reply" style="cursor: pointer; color: red; margin-left: 10px;">&times;</span>
+                </p>
+                <div class="reply-image" style="display: none;">
+                    <img src="" alt="Reply Image" class="reply-image-preview" style="max-width:50px; max-height: 50px; margin-top: 5px;">
+                </div>
+            </div>
 
-    <div class="newly-listed" id="newlyListed">
-        <p class="newly-header">
-            Newly Listed Plants
-        </p>
-        <div class="locations" id="locations">
-            <!-- Locations -->
+
+
+
+
+            <!-- pang send ng messages  -->
+            <form class="message-form" id="messageForm" enctype="multipart/form-data">
+                <i class='bx bx-image-add bx-md' id="image-upload-icon"></i>
+                <input class="message-input" type="text" name="message" id="message" placeholder="Type your message here">
+                <input type="file" id="image-upload" name="image" accept="image/*" style="display: none;">
+                <button id="send" type="submit">Send</button>
+            </form>
+
+           
         </div>
-        <div class="newly-contents" id="newly-contents">
-            <!-- Products -->
-        </div>
+     
     </div>
-
-  <!-- Login Modal -->
-<div id="loginModal" class="modal">
-    <div class="modal-content">
-        <span class="close">&times;</span>
-        <h2>Login</h2>
-        <form method="POST" action="" id="loginForm">
-            <input type="email" id="loginEmail" placeholder="Email" required>
-            <div class="error-label" style="display: none;"></div>
-            <input type="password" id="loginPassword" placeholder="Password" required>
-            <div class="error-label" style="display: none;"></div>
-            <button type="submit">Login</button>
-        </form>
-        <p>Don't have an account? <a href="#" id="signupLink">Sign Up</a></p>
-    </div>
-</div>
-
-<div class="about-us" id="aboutUs" style="display: none;">
-        <?php include 'aboutUs.php'; ?>
-</div>
-
-<!-- Signup Modal -->
-<div class="modal" id="modalOverlay"></div> <!-- Overlay for blur effect -->
-<div id="signupModal" class="modal">
-    <div class="modal-content">
-        <span class="close">&times;</span>
-        <h2>Sign Up</h2>
-        <form method="POST" action="" id="signupForm" enctype="multipart/form-data">
-            <div class="form-group">
-                <label for="signupEmail">Email</label>
-                <input type="email" id="signupEmail" name="email" placeholder="Email" required>
-            </div>
-
-            <div class="form-group">
-                <label for="signupPassword">Password</label>
-                <input type="password" id="signupPassword" name="password" placeholder="Password" required>
-            </div>
-
-            <div class="form-group">
-                <label for="signupFirstName">First Name</label>
-                <input type="text" id="signupFirstName" name="firstname" placeholder="First Name" required>
-            </div>
-
-            <div class="form-group">
-                <label for="signupLastName">Last Name</label>
-                <input type="text" id="signupLastName" name="lastname" placeholder="Last Name" required>
-            </div>
-
-            <div class="form-group">
-                <label for="signupGender">Gender</label>
-                <select id="signupGender" name="gender" required>
-                    <option value="" disabled selected>Select Gender</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Other">Other</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="signupPhoneNumber">Phone Number</label>
-                <input type="tel" id="signupPhoneNumber" name="phonenumber" placeholder="Phone Number" required>
-            </div>
-
-            <div class="form-group">
-                <label for="signupAddress">Address</label>
-                <input type="text" id="signupAddress" name="address" placeholder="Address" required>
-            </div>
-
-            <div class="form-group">
-                <label for="signupProfilePicture">Profile Picture</label>
-                <input type="file" id="signupProfilePicture" name="profilePicture" accept="image/*">
-            </div>
-
-            <!-- Submit Button -->
-            <button type="submit">Sign Up</button>
-        </form>
-        <p>Already have an account? <a href="#" id="loginLink">Login</a></p>
-    </div>
-</div>
-
-<!-- Modal HTML structure -->
-<div id="viewDetailsModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="viewDetailsModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="viewDetailsModalLabel">Plant Details</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="row">
-          <div class="col-md-4">
-            <img id="plant-image" src="" alt="Plant Image" class="img-fluid">
-          </div>
-          <div class="col-md-8">
-            <h2 id="plant-name"></h2>
-            <p id="plant-description"></p>
-            <p id="plant-price"></p>
-            <p id="plant-location"></p>
-            <p id="seller-email"></p>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<section>
-<footer class="footer">
-    <div class="footer-content">
-        <div class="footer-links">
-            <h3>Quick Links</h3>
-            <a href="#">Home</a>
-            <a href="#">About</a>
-            <a href="#">Services</a>
-            <a href="">Contact Us</a>
-            <a href="#">Privacy Policy</a>
-        </div>
-        <div class="footer-contact">
-            <h3>Contact Us</h3>
-            <p>Email: support@plantbazaar.com</p>
-            <p>Phone: +123 456 7890</p>
-        </div>
-    </div>
-    <div class="footer-bottom">
-       
-    </div>
-</footer>
-</section>
-</html>
-
-
-    <script>
-        
-
-    // document.getElementById("chats").addEventListener("click", function() {
-        
-    // });
-    // Function to handle clicking on the username
-    $(document).on('click', '.chat-seller', function() {
-    let userId = $(this).closest('.seller').data('user-id'); // Get user ID from the closest seller div
-
-    // Fetch and display messages for this user
-    // display_messages(userId);
-
-    // Update the user status to 1 when chatting
-    $.ajax({
-        url: 'ajax/update_users_status.php', // Endpoint to update user status
-        method: 'POST',
-        data: {
-            user_id: userId, // Send the user ID to update
-            status: 1 // Set the status to 1
-        },
-        success: function(response) {
-            console.log('User status updated successfully:', response);
-        },
-        error: function(xhr, status, error) {
-            console.error('Error updating user status:', error);
-        }
-    });
-});
-
-
-   
-
-   document.addEventListener('DOMContentLoaded', function() {
-
-    $(document).on('click', '.chat-seller', function() {
-    let sellerEmail = $(this).data('email');
-    console.log(`Chat Seller button clicked: Seller Email=${sellerEmail}`); // Log the seller email
-
-    // Redirect to chat page with seller email as a query parameter
-    window.location.href = `chat_upgrade/chat.php?seller_email=${encodeURIComponent(sellerEmail)}`;
-});
-
-    // Check if the profile link exists (only when the user is logged in)
-    const profileLink = document.querySelector('.profile-link');
-    const chatsLink =document.getElementById('chats');
-    
-    if (profileLink) {
-        profileLink.addEventListener('click', function() {
-            const dropdownMenu = document.querySelector('.dropdown-profile');
-            if (dropdownMenu) {
-                dropdownMenu.classList.toggle('show');
-            } else {
-                console.error("Dropdown menu not found");
-            }
-        });
-    } else {
-        console.log("Profile link not found - User may not be logged in");
-    }
-
-    if (chatsLink) {
-        chatsLink.addEventListener('click', function() {
-            window.location.href = "chat_upgrade/index.php";
-        });
-    } else {
-        console.log("Profile link not found - User may not be logged in");
-    }
-
+    <a href="logout.php">Logout</a>
+</body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
 $(document).ready(function() {
-    document.querySelectorAll('.chat-seller').forEach(button => {
-    button.addEventListener('click', function() {
-        // Get seller email from the data attribute
-        const sellerEmail = this.getAttribute('data-email');
 
-        // Redirect to chat.php with the seller email as a query parameter
-        window.location.href = `chat_upgrade/chat.php?seller_email=${encodeURIComponent(sellerEmail)}`;
+    // eto naman para sa option sa messages reply and delete function 
+    var openMessageId = null;
+
+// Click event for ellipsis
+$(document).on('click', '.ellipsis', function() {
+    var optionsMenu = $(this).siblings('.options-menu');
+    $('.options-menu').not(optionsMenu).hide(); // Hide other open menus
+    // alert("clicked");
+
+    // Toggle the current menu and store the message ID if it's open
+    optionsMenu.toggle();
+    if (optionsMenu.is(':visible')) {
+        openMessageId = $(this).data('message-id'); // Store the message ID
+    } else {
+        openMessageId = null; // Reset if closed
+    }
+});
+
+// para lumitaw sa reply-indicator 
+// Click event for reply button
+// $(document).on('click', '.reply-btn', function() {
+//     var messageId = $(this).data('message-id');
+//     console.log('Reply to message ID:', messageId);
+
+
+//     // Get the original message text and image (if it exists)
+//     var originalMessageItem = $(this).closest('.message-item');
+//     var originalMessageText = originalMessageItem.find('.message-text').text();
+//     var originalImage = originalMessageItem.find('img.message-image').attr('src'); // Get the image source if it exists
+
+//     // Update the reply indicator
+//     $('.reply-text').text(originalMessageText); // Set the reply text
+//     $('.reply-message').show(); // Show the reply message
+
+//     // Check if there is an image
+//     if (originalImage) {
+//         $('.reply-image-preview').attr('src', originalImage); // Set the image source
+//         $('.reply-image').show(); // Show the image
+//     } else {
+//         $('.reply-image').hide(); // Hide the image if there is no reply image
+//     }
+
+
+// });
+
+// pang sara natin sa reply-indicator 
+// Click event for closing the reply indicator
+// $(document).on('click', '.close-reply', function() {
+//     // Hide the reply indicator
+//     $('.reply-message').hide();
+//     $('.reply-image').hide(); // Hide the image if it was shown
+//     $('.reply-text').text(''); // Clear the reply text
+//     $('#message').val(''); // Clear the message input
+// });
+// animation sa scroll 
+
+
+
+
+    // Click event for delete button
+    $(document).on('click', '.delete-btn', function() {
+        var messageId = $(this).data('message-id');
+        console.log('Delete message ID:', messageId);
+        // Implement delete functionality here
     });
-});
 
-    $(".about").click(function(event) {
-  event.preventDefault();
-  $.ajax({
-    type: "GET",
-    url: "aboutus.php",
-    success: function(data) {
-        console.log("Success: " + data);
-      $("#contentContainer").html(data);
-    },
-    error: function(xhr, status, error) {
-      console.error("Failed to load aboutus.php");
-    }
-  });
-});
-});
-
-document.getElementById("about").addEventListener("click", function() {
-    var featured = document.getElementById("featured");
-    var newlyListed = document.getElementById("newlyListed");
-    var aboutUs = document.getElementById("aboutUs");
-
-    if (aboutUs) {
-        featured.style.display = "none";
-        newlyListed.style.display = "none";
-        aboutUs.style.display = "block";
-    } else {
-        console.error("Element with id 'aboutUs' not found");
-    }
-});
-document.getElementById("about1").addEventListener("click", function() {
-    var featured = document.getElementById("featured");
-    var newlyListed = document.getElementById("newlyListed");
-    var aboutUs = document.getElementById("aboutUs");
-
-    if (aboutUs) {
-        featured.style.display = "none";
-        newlyListed.style.display = "none";
-        aboutUs.style.display = "block";
-    } else {
-        console.error("Element with id 'aboutUs' not found");
-    }
-});
-
-document.getElementById("home").addEventListener("click", function() {
-    var featured = document.getElementById("featured");
-    var newlyListed = document.getElementById("newlyListed");
-    var aboutUs = document.getElementById("aboutUs");
-
-    if (aboutUs) {
-        featured.style.display = "block";
-        newlyListed.style.display = "block";
-        aboutUs.style.display = "none";
-    } else {
-        console.error("Element with id 'aboutUs' not found");
-    }
-});
-
-document.getElementById("home1").addEventListener("click", function() {
-    var featured = document.getElementById("featured");
-    var newlyListed = document.getElementById("newlyListed");
-    var aboutUs = document.getElementById("aboutUs");
-
-    if (aboutUs) {
-        featured.style.display = "block";
-        newlyListed.style.display = "block";
-        aboutUs.style.display = "none";
-    } else {
-        console.error("Element with id 'aboutUs' not found");
-    }
-});
+    // Hide options when clicking outside
+    $(document).on('click', function(event) {
+        if (!$(event.target).closest('.message-options').length) {
+            $('.options-menu').hide();
+        }
+    });
 
 
+    // When the image upload icon is clicked para sa image to
+    $('#image-upload-icon').on('click', function() {
+        $('#image-upload').click();
+    });
+    $(document).on('click', '.message-image', function() {
+        // Get the src of the clicked image
+        var imageSrc = $(this).attr('src');
+        
+        // Set the src of the fullscreen image
+        $('#fullscreen-image').attr('src', imageSrc);
+        
+        // Show the overlay
+        $('#fullscreen-overlay').fadeIn();
+    });
 
-    // Hamburger menu functionality
-    const hamburger = document.querySelector('.hamburger');
-    if (hamburger) {
-        hamburger.addEventListener('click', function() {
-            const dropdownMenu = document.querySelector('.dropdown-menu');
-            if (dropdownMenu) {
-                dropdownMenu.classList.toggle('show');
-            } else {
-                console.error("Dropdown menu not found");
+    // When the overlay is clicked
+    $('#close-overlay').on('click', function() {
+        $('#fullscreen-overlay').fadeOut(); // Hide the overlay
+    });
+
+    // Optional: Hide the overlay if the user clicks anywhere on the overlay
+    $('#fullscreen-overlay').on('click', function() {
+        $(this).fadeOut(); // Hide the overlay
+    });
+
+    function loadUsers() {
+        // Fetching the users from the database
+        $.ajax({
+            url: "ajax/fetch_user.php",
+            type: "POST",
+            success: function(data) {
+                $(".user-list").html(data);
+                attachClickEvent();
             }
         });
-    } else {
-        console.error("Hamburger menu not found");
     }
-}); 
-    // AJAX Fetching of top Seller
-     $(document).ready(function() {
-        
+
+    loadUsers();
+
+    // Adding click events to the users
+    function attachClickEvent() {
+        $('.user').on('click', function() {
+            // Mark the clicked user as selected
+            $('.user').removeClass('selected'); // Remove selected class from all users
+            $(this).addClass('selected'); // Add selected class to the clicked user
+
+            var selectedUserId = $('.user.selected').attr('id'); // This should capture the ID of the currently selected user
+            var username = $(this).data('username');
+            console.log('Clicked user ID:', selectedUserId);
+            console.log('Clicked username:', username);
+            // Assuming `username` is the variable with the username value
+            var formattedUsername = username.charAt(0).toUpperCase() + username.slice(1);
+            $('.username').text(formattedUsername);
 
 
-            $.ajax({
-                url: 'Ajax/fetch_top_seller.php',
-                type: 'GET',
-                success: function(response) {
-                    $('#featured-contents').html(response);
+            // Display messages for the selected user immediately
+            display_messages(selectedUserId);
+        });
+    }
 
-                    // Get the number of sellers from the hidden input
-                    var numSellers = $('#num_sellers').val();
+    // Send message function
+   function send_message() {
+    $('#send').on('click', function(event) {
+        event.preventDefault(); // Prevent form submission and page reload
 
-                    // Configure Splide depending on the number of sellers
-                    if (numSellers > 1) {
-                        // If more than 1 seller, use loop mode
-                        new Splide('#seller-slider', {
-                            type   : 'loop:slide',
-                            perPage: 5,
-                            autoplay: true,
-                            gap: '1rem',
-                            breakpoints: {
-                                600: {
-                                    perPage: 1,
-                                },
-                                900: {
-                                    perPage: 2,
-                                },
-                            }
-                        }).mount();
-                    } else if (numSellers == 1) {
-                        // If only 1 seller, use rewind mode (no looping)
-                        new Splide('#seller-slider', {
-                            type   : 'slide',
-                            rewind : true,  // No loop, just slide back to the beginning
-                            perPage: 1,     // Display 1 item
-                            autoplay: false, // Disable autoplay
-                        }).mount();
-                    }
-                }
-            });
-            // End of AJAX Fetching of top Seller
+        var selectedUserId = $('.user.selected').attr('id'); // Get the selected user ID
 
-            // AJAX Fetching of newly listed plants
-            $.ajax({ 
-                url: 'Ajax/fetch_newly_listed.php',
-                type: 'GET',
-                success: function(response) {
-                    try {
-                        let plants = response;
-
-                        if (plants.error) {
-                            alert(plants.error); // Show error message if any
-                            return;
-                        }
-
-                        // Group plants by location
-                        let plantsByLocation = {};
-                        plants.forEach(function(product) {
-                            if (!plantsByLocation[product.region]) {
-                                plantsByLocation[product.region] = [];
-                            }
-                            plantsByLocation[product.region].push(product);
-                        });
-                        // End of AJAX Fetching of newly listed plants
-
-                        let contentHtml = '';
-                        let locationsHtml = `
-                            <div class="plant-location">
-                                <button class="location-btn" data-location="all">Show All</button>
-                            </div>`;
-
-                        for (let location in plantsByLocation) {
-                            // Add plant items to contentHtml
-                            plantsByLocation[location].forEach(function(product) {
-                                let imgPath = `Products/${product.seller_email}/${product.img1}`;
-                                contentHtml += `
-                                    <div class="plant-item" data-location="${product.region}">
-                                        <div class="plant-image">
-                                            <img src="${imgPath}" alt="${product.plantname}">
-                                        </div>
-                                        <p>${product.plantname}</p>
-                                        <p>Price: ₱${product.price}</p>
-                                        <div class="plant-item-buttons">
-                                            <button class="view-details" data-id="${product.plantid}" data-email="${product.seller_email}">View Details</button>
-                                            <button class="chat-seller" data-email="${product.seller_email}" >Chat Seller</button>
-                                        </div>
-                                    </div>`;
-                            });
-
-                            // Add location buttons to locationsHtml
-                            locationsHtml += `
-                                <div class="plant-location">
-                                    <button class="location-btn" data-location="${location}">
-                                        ${location}
-                                    </button>
-                                </div>`;
-                        }
-
-                        $('#newly-contents').html(contentHtml);
-                        $('#locations').html(locationsHtml);
-
-                        // Add event listeners to location buttons to filter plants
-                        $('.location-btn').on('click', function() {
-                            let location = $(this).data('location');
-                            console.log(`Button clicked: Location=${location}`); // Log the location
-
-                            if (location === 'all') {
-                                $('.plant-item').show();
-                            } else {
-                                $('.plant-item').each(function() {
-                                    if ($(this).data('location') === location) {
-                                        $(this).show();
-                                    } else {
-                                        $(this).hide();
-                                    }
-                                });
-                            }
-                        });
-
-                      // Add event listeners to view-details and chat-seller buttons
-                      $(document).on('click', '.view-details', function() {
-                            let plantId = $(this).data('id');
-                            let sellerEmail = $(this).data('email');
-
-                            console.log(`View Details button clicked: Plant ID=${plantId}`); // Log the plant ID.
-                            console.log(`Chat Seller button clicked: Seller Email=${sellerEmail}`); // Log the seller email
-
-                            // Create a hidden form and submit it
-                            let form = $('<form>', {
-                                action: 'viewdetails?plant=' + plantId,
-                                method: 'POST'
-                            }).append($('<input>', {
-                                type: 'hidden',
-                                name: 'plantId',
-                                value: plantId
-                            })).append($('<input>', {
-                                type: 'hidden',
-                                name: 'sellerEmail',
-                                value: sellerEmail
-                            }));
-
-                            $('body').append(form);
-                            form.submit();
-
-                            // Push the current state into the history when opening the modal
-                            history.pushState(null, '', window.location.href);
-                        });
-
-                        $(document).on('click', '.chat-seller', function() {
-                            let sellerEmail = $(this).data('email');
-                            console.log(`Chat Seller button clicked: Seller Email=${sellerEmail}`); // Log the seller email
-                            window.location.href = `chat_upgrade/chat.php?seller_email=${encodeURIComponent(sellerEmail)}`;
-                        });
-                    } catch (e) {
-                        console.error("Error parsing JSON", e);
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error("AJAX Error:", status, error);
-                    Swal.fire({
-                    icon: "error",
-                    title: "Error",
-                    text: "An unexpected error occurred. Please try again later."
-                });
-                } 
-                             
-            });  
-
-            
-            // End of AJAX Fetching of newly listed plants
-            $('#viewDetailsModal .close').on('click', function() {
-            $('#viewDetailsModal').modal('hide');
-            });
-
-// Login form validation
-$("#loginForm").submit(function(event) {
-    event.preventDefault();
-
-    var email = $("#loginEmail").val();
-    var password = $("#loginPassword").val();
-
-    $.ajax({
-        url: "Ajax/login.php",
-        type: "POST",
-        data: { email: email, password: password },
-        dataType: 'json',
-        success: function(response) {
-            console.log("Response: " + JSON.stringify(response));
-            if (response.success) {
-                Swal.fire({
-                    position: "center",
-                    icon: "success",
-                    title: response.message,
-                    showConfirmButton: false,
-                    timer: 3000
-                });
-                // Reload page after 1.5 seconds
-                setTimeout(function() {
-                    location.reload();
-                }, 3000);
-            } else {
-                if (response.message === 'Email not found') {
-                    $("#loginEmail").addClass("error");
-                    $("#loginEmail").next(".error-label").text(response.message).show();
-                } else if (response.message === 'Invalid password') {
-                    $("#loginPassword").addClass("error");
-                    $("#loginPassword").next(".error-label").text(response.message).show();
-                } else {
-                    $("#loginEmail").addClass("error");
-                    $("#loginPassword").addClass("error");
-                    $(".error-label").text(response.message).show();
-                }
-            }
-        },
-        error: function(xhr, status, error) {
-            if (xhr.status === 200) {
-        // Login was successful, but response body is not in expected format
-        console.log("Login successful, but response body is not in expected format");
-        // You can also try to parse the response body as text or HTML
-        }else{
-            console.error("Error: " + status + " - " + error);
-            Swal.fire({
-                icon: "error",
-                title: "Error",
-                text: "An unexpected error occurred. Please try again later.",
-            });
-            $("#loginEmail").addClass("error");
-            $("#loginPassword").addClass("error");
-            $(".error-label").text("An unexpected error occurred").show();
+        if (!selectedUserId) {
+            alert("Please select a user before sending a message.");
+            return; // Exit if no user is selected
         }
-    }
-    });
-});
 
-// Clear error label when correct email is inputted
-$("#loginEmail").on("keyup", function() {
-    var email = $(this).val();
-    if (email !== "") {
-        $(this).removeClass("error");
-        $(this).next(".error-label").hide();
-    }
-});
-$("#signupForm").submit(function(event) {
-    event.preventDefault(); // Prevent default form submission
+        var formData = new FormData($('#messageForm')[0]); // Create form data object, including the file
 
-    // Create a FormData object
-    var formData = new FormData();
+        var recipientId = selectedUserId; // Use the selected recipient ID
+        var senderId = <?php echo $_SESSION['user_id']; ?>; // Get the sender ID from the session
 
-    // Append form data
-    formData.append('profilePicture', $('#signupProfilePicture')[0].files[0]); // Get the file input
-    formData.append('email', $("#signupEmail").val());
-    formData.append('password', $("#signupPassword").val());
-    formData.append('firstname', $("#signupFirstName").val());
-    formData.append('lastname', $("#signupLastName").val());
-    formData.append('gender', $("#signupGender").val());
-    formData.append('phonenumber', $("#signupPhoneNumber").val());
-    formData.append('address', $("#signupAddress").val());
+        // Append sender_id and recipient_id to form data
+        formData.append('sender_id', senderId);
+        formData.append('recipient_id', recipientId);
 
-    $.ajax({
-        url: "Ajax/register.php",
-        type: "POST",
-        data: formData,
-        processData: false, // Prevent jQuery from processing the data
-        contentType: false, // Prevent jQuery from setting the content-type
-        success: function(response) {
-            console.log("Response: " + response);
-            if (response.trim() === "success") {
-                Swal.fire({
-                    position: "center",
-                    icon: "success",
-                    title: "Successfully Registered",
-                    showConfirmButton: true,
-                    timer: 3000
-                });
-                // Reload page after 3 seconds
-                setTimeout(function() {
-                    location.reload();
-                }, 3000);
-            } else {
-                Swal.fire({
-                    icon: "error",
-                    title: "Error",
-                    text: "An unexpected error occurred. Please try again later."
-                });
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error("Error: " + status + " - " + error);
-            Swal.fire({
-                icon: "error",
-                title: "Error",
-                text: "An unexpected error occurred. Please try again later."
-            });
+        // Check if replying to a message
+        var replyMessageId = $('.reply-message').data('message-id'); // Get the message ID being replied to
+        if (replyMessageId) {
+            formData.append('reply_to', replyMessageId); // Append this to the form data
         }
-    });
-});
-
-
-
-// Logout AJAX
-$(document).on('click', '#logoutLink', function(event) {
-        event.preventDefault();
 
         $.ajax({
-            url: 'Ajax/logout.php', // Path to your logout.php file
+            url: 'ajax/send_message.php', // Your PHP file to handle saving the message and image
             type: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
             success: function(response) {
-                if (response.trim() === "success") {
-                    Swal.fire({
-                        position: 'center',
-                        icon: 'success',
-                        title: 'Successfully Logged out',
-                        showConfirmButton: false,
-                        timer: 3000
-                    });
-                    // Reload page after 3 seconds
-                    setTimeout(function() {
-                        location.reload();
-                    }, 3000);
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Logout Failed',
-                        text: 'Please try again.',
-                    });
-                }
+                console.log('Message sent successfully:', response);
+
+                $('#message').val(''); // Clear the input field after sending
+                $('#image-upload').val(''); // Clear the file input after sending
+                $('.reply-message').hide(); // Hide the reply indicator after sending
+
+                // Reset the form
+                $('#message').val('');
+                var audio = document.getElementById("send-sound");
+                audio.play();
+                // Clear the reply-to data
+                $('.reply-message').hide().data('message-id', null).html('');
+                scrollToBottom();
             },
             error: function(xhr, status, error) {
-                console.error("Error: " + status + " - " + error);
-                Swal.fire({
-                icon: "error",
-                title: "Error",
-                text: "An unexpected error occurred. Please try again later."
-            });
+                console.error('Error:', error);
             }
         });
     });
-
-    // Add event listener to view-details buttons
-
-        // Get the modals
-    var loginModal = document.getElementById("loginModal");
-    var signupModal = document.getElementById("signupModal");
-
-    // Get the links to open the modals
-    var signupLink = document.getElementById("signupLink");
-    var loginLink = document.getElementById("loginLink");
-
-    // Get the links inside modals (Login inside Signup modal and vice versa)
-    var loginLinkInSignupModal = document.querySelector("#signupModal #loginLink");
-
-    // Get the <span> elements that close the modals
-    var closeButtons = document.getElementsByClassName("close");
-
-    // Function to open the login modal
-    function openLoginModal() {
-        signupModal.style.display = "none";
-        loginModal.style.display = "block";
-    }
-
-    // Function to open the signup modal
-    function openSignupModal() {
-        loginModal.style.display = "none";
-        signupModal.style.display = "block";
-    }
-
-    // When the user clicks the signup link, open the signup modal
-    signupLink.onclick = function(event) {
-        event.preventDefault();
-        openSignupModal();
-        loginForm.reset();
-    };
-
-    // When the user clicks the login link, open the login modal
-    loginLink.onclick = function(event) {
-        event.preventDefault();
-        openLoginModal();
-        signupForm.reset();
-    };
-
-    loginLink1.onclick = function(event) {
-        event.preventDefault();
-        openLoginModal();
-        signupForm.reset();
-    };
-
-    // When the user clicks the login link inside the signup modal, switch to the login modal
-    loginLinkInSignupModal.onclick = function(event) {
-        event.preventDefault();
-        openLoginModal();
-        signupForm.reset();
-    };
-
-    // Close the modals when clicking the close (x) buttons
-    for (var i = 0; i < closeButtons.length; i++) {
-        closeButtons[i].onclick = function() {
-            loginModal.style.display = "none";
-            signupModal.style.display = "none";
-        };
-    }
-
-    // // Close the modal if the user clicks outside of it
-    // window.onclick = function(event) {
-    //     if (event.target == loginModal) {
-    //         loginModal.style.display = "none";
-    //     }
-    //     if (event.target == signupModal) {
-    //         signupModal.style.display = "none";
-    //     }
-    // };
+}
+/// Reply button logic
+$(document).on('click', '.reply-btn', function() {
+    var messageId = $(this).data('message-id'); // Capture the message ID being replied to
     
-     
+    // Find the content of the message being replied to
+    var messageContent = $(this).closest('.message-item').find('.message-text').text();
+    
+    // Find the image associated with the replied message, if any
+    var replyImage = $(this).closest('.message-item').find('.message-image img').attr('src');
+
+    // Create the reply HTML with the cancel button included
+    var replyHtml = `
+    <div class="reply-content" style="display: flex; align-items: center;">
+        <strong>Replying to:</strong> ${messageContent}
+        ${replyImage ? `<div class="replied-image" style="margin-left: 10px;"><img src="${replyImage}" alt="Replied Image" style="max-width: 100px; max-height: 100px; border-radius: 5px;" /></div>` : ''}
+        <button class="cancel-reply" style="padding: 5px; cursor: pointer; margin-left: 10px;">X</button>
+    </div>
+    `;
+
+    // Display the reply message
+    $('.reply-message').show()
+        .data('message-id', messageId) // Store the message ID in a data attribute
+        .html(replyHtml);
+
+    // Reset the form in case the user cancels or doesn't complete a previous reply
+    $('#message').val(''); // Clear the message input to prepare for a new reply
+});
+
+// Cancel reply button logic
+$(document).on('click', '.cancel-reply', function() {
+    $('.reply-message').hide(); // Hide the reply message indicator
+    $('.reply-message').data('message-id', null); // Clear the message ID being replied to
+});
+
+
+
+
+
+    send_message();
+
+    // Function to display messages
+    let isUserAtBottom = true;
+
+// Function to scroll to the bottom of the message container
+function scrollToBottom() {
+    const chatContainer = document.querySelector('.message-container');
+    chatContainer.scrollTop = chatContainer.scrollHeight - chatContainer.clientHeight;
+}
+
+// Check if the user is at the bottom of the chat container
+function checkScrollPosition() {
+    const chatContainer = document.querySelector('.message-container');
+    isUserAtBottom = chatContainer.scrollTop + chatContainer.clientHeight >= chatContainer.scrollHeight;
+}
+
+// Call this function whenever the user scrolls
+document.querySelector('.message-container').addEventListener('scroll', checkScrollPosition);
+
+// Function to display messages
+function display_messages(recipientId) {
+    $.ajax({
+        url: 'ajax/display_message.php', // Your server endpoint to fetch messages
+        method: 'GET',
+        data: { recipient_id: recipientId },
+        success: function(response) {
+            // Assuming you append the response to the chat container
+            $('.message-container').html(response);
+
+            // Scroll to the bottom only if the user is at the bottom
+            if (isUserAtBottom) {
+                scrollToBottom();
+            }
+        }
+    });
+}
+
+// Call the display_messages function every interval
+setInterval(function() {
+    var selectedUserId = $('.user.selected').attr('id');
+    if (selectedUserId) {
+        display_messages(selectedUserId);
+    }
+}, 2000); // Adjust time interval as needed
+document.querySelector('.refresh-btn').addEventListener('click', function() {
+    // $.ajax({
+    //     url: "ajax/fetch_latest_message.php",
+    //     method: "POST",
+    //     dataType: "json",
+    //     success: function(response) {
+    //         response.forEach(function(userMessage) {
+    //             let userElement = $("#" + userMessage.user_id);
+    //             let messagePreview = userElement.find('.message-preview');
+                
+    //             // Update message preview and timestamp
+    //             messagePreview.text(userMessage.message);
+    //             userElement.find('.time-stamp').text(userMessage.timestamp);
+    //             // Check if the message is new and unseen
+    //             if (userMessage.status === 0) { // Assuming 0 is for unseen
+    //                 playNotificationSound(); // Play notification sound for unseen messages
+    //             }
+                
+                    
+                    
+    //                 // Optional visual cue
+    //                 userElement.find('.message-notification').addClass('new-message');
+    //                 setTimeout(function() {
+    //                     userElement.find('.message-notification').removeClass('new-message');
+    //                 }, 1000);
+                
+    //         });
+    //     }
+    // });
+
+
+
+
+
+});
+
+// Polling function for new messages
+// Function to play notification sound
+// Assuming you have a variable for the logged-in user ID
+let loggedInUserId = <?php echo $_SESSION['user_id']; ?>; // Replace with actual logged-in user ID
+let notificationAudio = new Audio('sounds/Notification-Sound.mp3');
+let unseenMessageCount = 0; // Tracks unseen messages
+let soundEnabled = true; // Enable sound notifications by default
+function fetchLatestMessages() {
+    $.ajax({
+        url: "ajax/fetch_latest_message.php",
+        method: "POST",
+        dataType: "json",
+        success: function(response) {
+            console.log("Response from server:", response);
+            unseenMessageCount = 0; // Reset ang bilang ng unseen messages
+
+            response.forEach(function(userMessage) {
+                // I-update ang mga detalye ng mensahe sa UI
+                let userElement = $("#" + userMessage.user_id);
+                let messagePreview = userElement.find('.message-preview');
+                
+                messagePreview.text(userMessage.message);
+                userElement.find('.time-stamp').text(userMessage.timestamp);
+                
+                console.log("Message status:", userMessage.status);
+                console.log("User ID:", userMessage.user_id);
+
+                // Check kung ang message ay unseen at para sa naka-login na user
+                if (userMessage.status === '0' && userMessage.recipient_id == loggedInUserId) {
+                    unseenMessageCount++;
+
+                    // Optional: maglagay ng visual cue sa UI
+                    userElement.find('.message-notification').addClass('new-message');
+                    setTimeout(function() {
+                        userElement.find('.message-notification').removeClass('new-message');
+                    }, 1000);
+                }
+            });
+
+            // Mag-play ng tunog kung may unseen messages na para sa user
+            if (unseenMessageCount > 0 && soundEnabled) {
+                playNotificationSound();
+            }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log("AJAX error:", textStatus, errorThrown);
+        }
+    });
+}
+
+
+function playNotificationSound() {
+    notificationAudio.currentTime = 0; // Reset to start
+    notificationAudio.play().catch(error => {
+        console.log('Notification sound could not be played:', error);
+    });
+}
+
+
+
+
+// Function to set up notification permission and initial sound
+function setupNotification() {
+    Notification.requestPermission().then((permission) => {
+        if (permission === 'granted') {
+            console.log("Notification permission granted.");
+        } else {
+            console.log("Notification permission denied.");
+        }
+    });
+}
+// Add an event listener to enable sound after first interaction
+document.addEventListener('click', () => {
+  // Your sound play logic goes here
+  playNotificationSound();
+}, { once: true }); // This ensures it only runs once
+
+
+// Set up the notification on window load
+window.onload = function() {
+    setupNotification();
+    
+    // Fetch messages immediately on load
+    fetchLatestMessages();
+
+    // Set interval to fetch new messages every 2 seconds
+    setInterval(fetchLatestMessages, 2000);
+
+    // Set up event listener for refresh button
+    document.querySelector('.refresh-btn').addEventListener('click', fetchLatestMessages);
+};
+
+
+
+    $(document).on("click", ".user", function() {
+    let selectedUserId = $(this).attr("id"); // Assuming each .user has the recipient's ID as the element ID
+
+    $.ajax({
+        url: "ajax/mark_as_seen.php",
+        method: "POST",
+        data: { recipient_id: selectedUserId },
+        success: function(response) {
+            console.log("Messages marked as seen for recipient:", selectedUserId);
+        }
     });
 
-    </script>
-</body>
+    // Load messages for the selected user, assuming you have a function for that
+    display_messages(selectedUserId);
+});
+
+
+
+    });
+</script>
+
 </html>
