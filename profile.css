@@ -1,0 +1,186 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f2f5;
+    margin: 0;
+    padding: 0;
+}
+
+.seller-profile {
+    width: 800px;
+    margin: 50px auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.seller-info {
+    text-align: center;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.seller-info img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #4caf50;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.seller-info img:hover {
+    transform: scale(1.1);
+}
+
+h3 {
+    margin-top: 15px;
+    font-size: 24px;
+    color: #333;
+}
+
+p {
+    font-size: 16px;
+    color: #555;
+}
+
+.listings ul {
+    list-style: none;
+    padding: 0;
+}
+
+.listings li {
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.listings img {
+    margin-top: 5px;
+    width: 100px;
+    height: auto;
+}
+
+a {
+    display: inline-block;
+    margin-top: 20px;
+    text-decoration: none;
+    color: white;
+    background-color: #4caf50;
+    padding: 10px 20px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+a:hover {
+    background-color: #45a049;
+}
+
+/* Zoom effect on profile picture */
+#zoom-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    overflow: auto;
+    text-align: center;
+}
+
+#zoom-modal img {
+    max-width: 90%;
+    max-height: 80%;
+}
+
+#zoom-modal .close {
+    position: absolute;
+    top: 30px;
+    right: 50px;
+    font-size: 40px;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+}
+.plant-listings {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.plant-card {
+    display: flex;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.plant-img-container {
+    flex: 1;
+}
+
+.plant-img {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.plant-img:hover {
+    transform: scale(1.05);
+}
+
+.plant-details {
+    flex: 2;
+    padding-left: 20px;
+}
+
+.plant-details h4 {
+    font-size: 22px;
+    margin: 0;
+    color: #333;
+}
+
+.plant-details p {
+    font-size: 16px;
+    color: #555;
+}
+
+/* Zoom effect on plant image */
+#zoom-plant-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    overflow: auto;
+    text-align: center;
+}
+
+#zoom-plant-modal img {
+    max-width: 90%;
+    max-height: 80%;
+}
+
+#zoom-plant-modal .close {
+    position: absolute;
+    top: 30px;
+    right: 50px;
+    font-size: 40px;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+}
