@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "sweetalert2": "^11.14.0"
+    "lightbox2": "^2.11.5",
+    "sweetalert2": "^11.6.13"
   }
 }

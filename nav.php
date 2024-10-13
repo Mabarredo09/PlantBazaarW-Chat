@@ -49,7 +49,7 @@ if ($isLoggedIn) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <script src="node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
-    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <title>Plant-Bazaar</title>
 </head>
 
@@ -62,13 +62,13 @@ if ($isLoggedIn) {
                 <i class="fa-solid fa-spa"></i>
             </div>
             <div class="nav1">
-                <a href="#" id="home">Home</a>
-                <a href="#">Plants Categories</a>
-                <a href="#" id="about">About</a>
+                <a href="index" id="home">Home</a>
+                <a href="plantCategories">Plants Categories</a>
+                <a href="#" >About</a>
                 <a href="#">Contact Us</a>
                 <?php if ($isLoggedIn): ?>
                 <a href="#" id="chats">Chats</a>
-                <?php endif;?>
+                <?php endif;?> 
             </div>
             <div class="login-signup">
                 <?php if ($isLoggedIn): ?>
@@ -113,7 +113,7 @@ if ($isLoggedIn) {
     <?php if ($isSeller): ?>
         <a href="Seller/seller_dashboard">Seller Dashboard</a> <!-- Change the link as needed for the seller's dashboard -->
     <?php else: ?>
-        <a href="#" id="sellerApply">Be A Seller</a> <!-- Link to becoming a seller -->
+        <a href="applySeller.php" id="sellerApply" class="sellerApply">Be A Seller</a> <!-- Link to becoming a seller -->
     <?php endif; ?>
     <a href="editprofile.php">Edit Profile</a>
     <a href="#" id="logoutLink">Logout</a>
@@ -201,7 +201,7 @@ if ($isLoggedIn) {
 
 </html>
 
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         
 
@@ -270,6 +270,8 @@ if ($isLoggedIn) {
         console.log("Profile link not found - User may not be logged in");
     }
 
+    
+
 $(document).ready(function() {
     document.querySelectorAll('.chat-seller').forEach(button => {
     button.addEventListener('click', function() {
@@ -281,75 +283,77 @@ $(document).ready(function() {
     });
 });
 
-    $(".about").click(function(event) {
-  event.preventDefault();
-  $.ajax({
-    type: "GET",
-    url: "aboutus.php",
-    success: function(data) {
-        console.log("Success: " + data);
-      $("#contentContainer").html(data);
-    },
-    error: function(xhr, status, error) {
-      console.error("Failed to load aboutus.php");
-    }
-  });
-});
-});
+//     $(".about").click(function(event) {
+//   event.preventDefault();
+//   $.ajax({
+//     type: "GET",
+//     url: "aboutus.php",
+//     success: function(data) {
+//         console.log("Success: " + data);
+//       $("#contentContainer").html(data);
+//     },
+//     error: function(xhr, status, error) {
+//       console.error("Failed to load aboutus.php");
+//     }
+//   });
+// });
+// });
 
-document.getElementById("about").addEventListener("click", function() {
-    var featured = document.getElementById("featured");
-    var newlyListed = document.getElementById("newlyListed");
-    var aboutUs = document.getElementById("aboutUs");
 
-    if (aboutUs) {
-        featured.style.display = "none";
-        newlyListed.style.display = "none";
-        aboutUs.style.display = "block";
-    } else {
-        console.error("Element with id 'aboutUs' not found");
-    }
-});
-document.getElementById("about1").addEventListener("click", function() {
-    var featured = document.getElementById("featured");
-    var newlyListed = document.getElementById("newlyListed");
-    var aboutUs = document.getElementById("aboutUs");
 
-    if (aboutUs) {
-        featured.style.display = "none";
-        newlyListed.style.display = "none";
-        aboutUs.style.display = "block";
-    } else {
-        console.error("Element with id 'aboutUs' not found");
-    }
-});
+// document.getElementById("about").addEventListener("click", function() {
+//     var featured = document.getElementById("featured");
+//     var newlyListed = document.getElementById("newlyListed");
+//     var aboutUs = document.getElementById("aboutUs");
 
-document.getElementById("home").addEventListener("click", function() {
-    var featured = document.getElementById("featured");
-    var newlyListed = document.getElementById("newlyListed");
-    var aboutUs = document.getElementById("aboutUs");
+//     if (aboutUs) {
+//         featured.style.display = "none";
+//         newlyListed.style.display = "none";
+//         aboutUs.style.display = "block";
+//     } else {
+//         console.error("Element with id 'aboutUs' not found");
+//     }
+// });
+// document.getElementById("about1").addEventListener("click", function() {
+//     var featured = document.getElementById("featured");
+//     var newlyListed = document.getElementById("newlyListed");
+//     var aboutUs = document.getElementById("aboutUs");
 
-    if (aboutUs) {
-        featured.style.display = "block";
-        newlyListed.style.display = "block";
-        aboutUs.style.display = "none";
-    } else {
-        console.error("Element with id 'aboutUs' not found");
-    }
-});
+//     if (aboutUs) {
+//         featured.style.display = "none";
+//         newlyListed.style.display = "none";
+//         aboutUs.style.display = "block";
+//     } else {
+//         console.error("Element with id 'aboutUs' not found");
+//     }
+// });
 
-document.getElementById("home1").addEventListener("click", function() {
-    var featured = document.getElementById("featured");
-    var newlyListed = document.getElementById("newlyListed");
-    var aboutUs = document.getElementById("aboutUs");
+// document.getElementById("home").addEventListener("click", function() {
+//     var featured = document.getElementById("featured");
+//     var newlyListed = document.getElementById("newlyListed");
+//     var aboutUs = document.getElementById("aboutUs");
 
-    if (aboutUs) {
-        featured.style.display = "block";
-        newlyListed.style.display = "block";
-        aboutUs.style.display = "none";
-    } else {
-        console.error("Element with id 'aboutUs' not found");
-    }
+//     if (aboutUs) {
+//         featured.style.display = "block";
+//         newlyListed.style.display = "block";
+//         aboutUs.style.display = "none";
+//     } else {
+//         console.error("Element with id 'aboutUs' not found");
+//     }
+// });
+
+// document.getElementById("home1").addEventListener("click", function() {
+//     var featured = document.getElementById("featured");
+//     var newlyListed = document.getElementById("newlyListed");
+//     var aboutUs = document.getElementById("aboutUs");
+
+//     if (aboutUs) {
+//         featured.style.display = "block";
+//         newlyListed.style.display = "block";
+//         aboutUs.style.display = "none";
+//     } else {
+//         console.error("Element with id 'aboutUs' not found");
+//     }
 });
 
 
@@ -369,6 +373,7 @@ document.getElementById("home1").addEventListener("click", function() {
         console.error("Hamburger menu not found");
     }
 }); 
+
   
             
             // End of AJAX Fetching of newly listed plants
@@ -520,6 +525,7 @@ $(document).on('click', '#logoutLink', function(event) {
                     // Reload page after 3 seconds
                     setTimeout(function() {
                         location.reload();
+                        window.location.href = " ";
                     }, 3000);
                 } else {
                     Swal.fire({
@@ -603,6 +609,74 @@ $(document).on('click', '#logoutLink', function(event) {
         };
     }
 
+
+    
+// Get the dropdown-profile div
+
+
+// Get the sellerApply button
+var sellerApplyButton = document.querySelector(".sellerApply");
+
+// Add event listener to the sellerApply button
+sellerApplyButton.addEventListener("click", function() {
+    console.log("Seller apply button clicked");
+  // Get the seller application modal
+  var sellerApplicationModal = document.getElementById("sellerApplicationModal");
+  // Show the modal
+  sellerApplicationModal.style.display = "block";
+});
+
+// Get the seller application modal
+var sellerApplicationModal = document.getElementById("sellerApplicationModal");
+
+// Get the close button
+var closeButton = sellerApplicationModal.querySelector(".close");
+$(document).ready(function() {
+    // Add event listener to the sellerApply button
+    $('#sellerApply').on('click', function(event) {
+        event.preventDefault();  // Prevent the default link behavior (if it's a link)
+        console.log("Seller apply button clicked");  // Log a message when the button is clicked
+        $('#sellerApplicationModal').show();  // Show the modal
+    });
+    
+    // Add event listener to close button
+    $('#sellerApplicationModal .close').on('click', function() {
+        console.log("Close button clicked");  // Log a message when the close button is clicked
+        $('#sellerApplicationModal').hide();  // Hide the modal
+    });
+});
+
+// Add event listener to the sellerApply button
+document.getElementById("sellerApply").addEventListener("click", function(event) {
+    event.preventDefault();  // Prevent the default link behavior (if it's a link)
+    console.log("Seller apply button clicked");  // Log a message when the button is clicked
+    $('#sellerApplicationModal').show();  // Show the modal
+});
+// Add event listener to close button
+closeButton.onclick = function() {
+  sellerApplicationModal.style.display = "none";
+};
+
+    // Add event listener to apply button
+        document.getElementById("sellerApplicationForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+        var formData = new FormData(this);
+        $.ajax({
+            type: "POST",
+            url: "apply_as_seller.php",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+            console.log("Seller application form submitted successfully!");
+            console.log(response);
+            },
+            error: function(xhr, status, error) {
+            console.log("Error submitting seller application form:");
+            console.log(xhr.responseText);
+            }
+        });
+        });
     // // Close the modal if the user clicks outside of it
     // window.onclick = function(event) {
     //     if (event.target == loginModal) {
@@ -614,6 +688,6 @@ $(document).on('click', '#logoutLink', function(event) {
     // };
     
 
-    </script>
+ </script>
 </body>
 </html>

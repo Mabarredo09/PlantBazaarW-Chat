@@ -177,19 +177,16 @@ if ($isLoggedIn) {
                 <div class="image-upload-column">
                     <label for="img1">1st Image:</label>
                     <input type="file" id="img1" name="img1" accept="image/*" required>
-                    <span id="img1Label"></span>
                     <img id="img1Preview" src="" alt="Image Preview" style="width: 100px; height: 100px;">
                 </div>
                 <div class="image-upload-column">
                     <label for="img2">2nd Image:</label>
                     <input type="file" id="img2" name="img2" accept="image/*">
-                    <span id="img2Label"></span>
                     <img id="img2Preview" src="" alt="Image Preview" style="width: 100px; height: 100px;">
                 </div>
                 <div class="image-upload-column">
                     <label for="img3">3rd Image:</label>
                     <input type="file" id="img3" name="img3" accept="image/*">
-                    <span id="img3Label"></span>
                     <img id="img3Preview" src="" alt="Image Preview" style="width: 100px; height: 100px;">
                 </div>
             </div>
@@ -250,26 +247,26 @@ if ($isLoggedIn) {
             <div class="col-sm-6 mb-3">
             <label class="form-label">Region <span style="color:red;">*</span></label>
             <select name="editregion" class="region" id="region"></select>
-            <input type="text" class="editregion" name="editregion" id="region-text" required>
+            <input type="hidden" class="editregion" name="editregion" id="region-text" required>
             </div>
         <div class="col-sm-6 mb-3">
             <label class="form-label">Province *</label>
             <select name="eprovince" class="province" id="province"></select>
-            <input type="hidden" class="form-control form-control-md" name="editprovince" id="province-text" required>
+            <input type="hidden" class="editprovince" name="editprovince" id="province-text" required>
         </div>
         <div class="col-sm-6 mb-3">
             <label class="form-label">City / Municipality *</label>
             <select name="ecity"  class="city" id="city"></select>
-            <input type="hidden" class="form-control form-control-md" name="editcity" id="city-text" required>
+            <input type="hidden" class="editcity" name="editcity" id="city-text" required>
         </div>
         <div class="col-sm-6 mb-3">
             <label class="form-label">Barangay *</label>
             <select name="ebarangay" class="barangay" id="barangay"></select>
-            <input type="hidden" class="form-control form-control-md" name="editbarangay" id="barangay-text" required>
+            <input type="hidden" class="editbarangay" name="editbarangay" id="barangay-text" required>
         </div>
         <div class="col-md-6 mb-3">
             <label for="street-text" class="form-label">Street (Optional)</label>
-            <input type="text" class="street" name="editstreet" id="street-text">
+            <input type="hidden" class="editstreet" name="editstreet" id="street-text">
         </div>
 
             <label for="editPrice">Price:</label>
@@ -280,20 +277,18 @@ if ($isLoggedIn) {
             <div class="image-upload-column">
             <label for="editImg1">1st Image:</label>
             <input type="file" id="editImg1" name="img1" accept="image/*">
-            <img id="editImg1Preview" src="../Products/<?php echo $_SESSION['email'];?>/<?php echo $row['img1']; ?>" alt="Image Preview" style="width: 100px; height: 100px;">
+            <img id="editImg1Preview" src="" alt="Image Preview" style="width: 100px; height: 100px;">
             </div>
 
             <div class="image-upload-column">
             <label for="editImg2">2nd Image:</label>
             <input type="file" id="editImg2" name="img2" accept="image/*">
-            <span id="editImg2Label"></span>
             <img id="editImg2Preview" src="" alt="Image Preview" style="width: 100px; height: 100px;">
             </div>
 
             <div class="image-upload-column">
             <label for="editImg3">3rd Image:</label>
             <input type="file" id="editImg3" name="img3" accept="image/*">
-            <span id="editImg3Label"></span>
             <img id="editImg3Preview" src="" alt="Image Preview" style="width: 100px; height: 100px;">
             </div>
 
@@ -631,12 +626,19 @@ $.ajax({
     $('#editPlantId').prop('value', data.plantid);
     $('#editplantname').prop('value', data.plantname);
     $('#editPrice').prop('value', data.price);
-    // $('.editregion').prop('value', data.region);
+    $('.editregion').prop('value', data.region);
+    $('.editprovince').prop('value', data.province);
+    $('.editcity').prop('value', data.city);
+    $('.editbarangay').prop('value', data.barangay);
+    $('.editstreet').prop('value', data.street);
     $('#editplantdetails').prop('value', data.details);
     $('#editPlantcategories').prop('value', data.plantcategories);
     $('#editPlantSize').prop('value', data.plantSize);
     $('#editPlantColor').prop('value', data.plantColor);
     $('#editLocation').prop('value', data.location);
+    $('#editImg1Preview').attr('src', '../Products/' + '<?php echo $_SESSION['email'] ?>' + '/' + data.img1).attr('alt', data.plantname).text(data.img1);
+    $('#editImg2Preview').attr('src', '../Products/' + '<?php echo $_SESSION['email'] ?>' + '/' + data.img2).attr('alt', data.plantname).text(data.img2);
+    $('#editImg3Preview').attr('src', '../Products/' + '<?php echo $_SESSION['email'] ?>' + '/' + data.img3).attr('alt', data.plantname).text(data.img3);
     $('#editImg1Label').text(data.img1);
     $('#editImg2Label').text(data.img2);
     $('#editImg3Label').text(data.img3);

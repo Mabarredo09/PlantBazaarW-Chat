@@ -34,6 +34,7 @@ if ($isLoggedIn) {
     if ($sellerResult && mysqli_num_rows($sellerResult) > 0) {
         $isSeller = true; // User is a seller
     }
+    
 }
 ?>
 
@@ -59,14 +60,13 @@ if ($isLoggedIn) {
         <p class="newly-header">
             Newly Listed Plants
         </p>
-        <div class="locations" id="locations">
-            <!-- Locations -->
-        </div>
+        <!-- <div class="locations" id="locations">
+         
+        </div> -->
         <div class="newly-contents" id="newly-contents">
             <!-- Products -->
         </div>
     </div>
-
 
 
     <script>
