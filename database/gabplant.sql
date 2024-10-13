@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 12, 2024 at 07:55 PM
+-- Generation Time: Oct 13, 2024 at 08:24 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -132,8 +132,8 @@ CREATE TABLE `product` (
 
 INSERT INTO `product` (`plantid`, `added_by`, `plantname`, `img1`, `img2`, `img3`, `plantColor`, `plantSize`, `plantcategories`, `details`, `location`, `region`, `province`, `city`, `barangay`, `street`, `price`, `createdAt`, `updatedAt`) VALUES
 (39, 2, 'Succulent', 'succulent.jpg', '', '', 'Green', '6cm', 'Succulent', 'Easy to maintain plant', 'Gapan', '', '', '', '', NULL, 200.00, '2024-09-18 15:01:52', '2024-09-18 15:01:52'),
-(46, 3, 'Euphorbia obesa', '461861999_900319622198902_4781648371440441819_n.jpg', '461795555_900319615532236_6193450879555062943_n.jpg', '461875136_900319612198903_6003683218236318191_n.jpg', '', 'Juvenile', 'outdoor', 'Euphorbia obesa can grow to 20 cm in height with a diameter of 9 cm. It is a single-stemmed, unbranched, firm-bodied plant. The stem is usually 8-angled and grooved, subglobose (almost spherical) in shape, elongating and becoming cylindric as it gets older. Younger plants have a rounded sea urchin-like shape.', '', 'Region III (Central Luzon)', 'Nueva Ecija', 'Cabanatuan City', 'Campo Tinio', 'Near Waltermart', 800.00, '2024-10-12 16:50:16', '2024-10-12 16:50:16'),
-(47, 3, 'Uebelmannia pectinifera', '461944679_901099365454261_1511506421590284050_n.jpg', '461953559_901099362120928_417283808325182436_n.jpg', '461934857_901099372120927_4382470582676685201_n.jpg', '', 'Adult', 'Indoor', 'Uebelmannia pectiniferaSN|14312]]SN|14312]] is a solitary cactus 10-50(-100) cm tall. It is a multiform species and very variable in habitat, comprising a complex of numerous local forms, where each form is linked to others by populations of plants with intermediate characteristics.', '', 'Region III (Central Luzon)', 'Nueva Ecija', 'Palayan City (Capital)', 'Sapang Buho', 'Malapit sa 7/11', 1600.00, '2024-10-12 17:21:45', '2024-10-12 17:21:45');
+(47, 3, 'Uebelmannia pectinifera', '461944679_901099365454261_1511506421590284050_n.jpg', '461953559_901099362120928_417283808325182436_n.jpg', '461934857_901099372120927_4382470582676685201_n.jpg', '', 'Adult', 'Indoor', 'Uebelmannia pectinifera is a solitary cactus 10-50(-100) cm tall. It is a multiform species and very variable in habitat, comprising a complex of numerous local forms, where each form is linked to others by populations of plants with intermediate characteristics.', '', 'Region III (Central Luzon)', 'Nueva Ecija', 'Palayan City (Capital)', 'Sapang Buho', 'Malapit sa 7/11', 1600.00, '2024-10-12 18:34:03', '2024-10-12 18:34:03'),
+(48, 3, 'Astrophytum asterias cv. Goryo Vtype', '461868218_900322995531898_8690682879674124111_n.jpg', '461946027_900322992198565_8126774815550641083_n.jpg', '461859863_900323002198564_5675261350630500625_n.jpg', '', 'Juvenile', 'Indoor', 'Normally Astrophytum asterias seedling have the standard 8 ribs, while only a small number of them have few or more ribs. The form with only five ribs, is particularly rare because many of the 5 ribbed seedlings that occasionally appear will usually develop additional ribs in a few years as they age. So it is quite exceptional to see an old A. asterias with five stable ribs. This form however looks suspiciously hybridized with myriostigma or coahuilense and probably is not a pure 100% asterias.', '', 'Region III (Central Luzon)', 'Nueva Ecija', 'City Of Gapan', 'San Vicente (Pob.)', 'Kangkong street', 1000.21, '2024-10-12 18:32:50', '2024-10-12 18:32:50');
 
 -- --------------------------------------------------------
 
@@ -167,7 +167,8 @@ INSERT INTO `product_archive` (`archiveID`, `postedBy`, `postPlantName`, `img1`,
 (42, 'maranathabarredo@gmail.com', 'Munggo', 'sold.jpg', 'default-image.jpg', 'default-image.jpg', 'Adult', 'Outdoor', '', 0, 100, '2024-10-12 16:29:02', '2024-10-12 16:29:02'),
 (43, 'maranathabarredo@gmail.com', 'asd', 'halam.jpg', 'default-image.jpg', 'default-image.jpg', 'Malaki', 'Tinola', '', 0, 123, '2024-10-12 16:29:03', '2024-10-12 16:29:03'),
 (44, 'maranathabarredo@gmail.com', 'Wala lang', 'Screenshot 2024-10-06 180127.png', 'default-image.jpg', 'default-image.jpg', 'Adult', 'Climbers', '', 0, 123, '2024-10-12 16:29:05', '2024-10-12 16:29:05'),
-(45, 'maranathabarredo@gmail.com', 'Malunggay', '3.png', 'default-image.jpg', 'default-image.jpg', 'Seedling', 'Indoor', '', 0, 1232, '2024-10-12 16:29:06', '2024-10-12 16:29:06');
+(45, 'maranathabarredo@gmail.com', 'Malunggay', '3.png', 'default-image.jpg', 'default-image.jpg', 'Seedling', 'Indoor', '', 0, 1232, '2024-10-12 16:29:06', '2024-10-12 16:29:06'),
+(46, 'maranathabarredo@gmail.com', 'Euphorbia obesa', '461861999_900319622198902_4781648371440441819_n.jpg', '461795555_900319615532236_6193450879555062943_n.jpg', '461875136_900319612198903_6003683218236318191_n.jpg', 'Juvenile', 'Outdoor', '', 0, 800, '2024-10-12 18:25:35', '2024-10-12 18:25:35');
 
 -- --------------------------------------------------------
 
@@ -208,7 +209,22 @@ CREATE TABLE `seller_applicant` (
 
 INSERT INTO `seller_applicant` (`applicantID`, `user_id`, `validId`, `selfieValidId`) VALUES
 (2, 1, 'pogiako.png', 'pogiako.png\r\n'),
-(4, 41, 'pogiKami.png', 'pogiKami.png');
+(4, 41, 'pogiKami.png', 'pogiKami.png'),
+(13, 48, 'mbarredo2n.neust@gmail.com_validId.png', 'mbarredo2n.neust@gmail.com_selfieValidId.png');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `seller_applicant_archive`
+--
+
+CREATE TABLE `seller_applicant_archive` (
+  `archiveID` int(11) NOT NULL,
+  `applicantID` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `validId` varchar(128) NOT NULL,
+  `selfieValidId` varchar(128) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -301,6 +317,12 @@ ALTER TABLE `seller_applicant`
   ADD KEY `user_id` (`user_id`);
 
 --
+-- Indexes for table `seller_applicant_archive`
+--
+ALTER TABLE `seller_applicant_archive`
+  ADD PRIMARY KEY (`archiveID`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -333,13 +355,13 @@ ALTER TABLE `messages`
 -- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
-  MODIFY `plantid` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
+  MODIFY `plantid` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
 
 --
 -- AUTO_INCREMENT for table `product_archive`
 --
 ALTER TABLE `product_archive`
-  MODIFY `archiveID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
+  MODIFY `archiveID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
 
 --
 -- AUTO_INCREMENT for table `sellers`
@@ -351,7 +373,13 @@ ALTER TABLE `sellers`
 -- AUTO_INCREMENT for table `seller_applicant`
 --
 ALTER TABLE `seller_applicant`
-  MODIFY `applicantID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `applicantID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
+-- AUTO_INCREMENT for table `seller_applicant_archive`
+--
+ALTER TABLE `seller_applicant_archive`
+  MODIFY `archiveID` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `users`
