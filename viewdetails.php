@@ -100,9 +100,11 @@ function getImagePath($sellerEmail, $img) {
 <body>
     <?php include 'nav.php'; ?>
     <!-- X button on the left to redirect to index.php -->
-    <a href="#" class="close-card" id="close">&times;</a>
-<div class="container">
+ 
 
+<div class="container">
+   <!-- New Back button -->
+   <a href="javascript:history.back()" class="back-button">Back</a>
     <div class="plantContainer">
     <div class="card">
         <div class="card-image-container">
@@ -114,17 +116,18 @@ function getImagePath($sellerEmail, $img) {
         </div>
         </div>
         <div class="card-content">
-            <h1><?php echo $plantName; ?></h1>
-            <div class="plant-details">
-                <p><strong>Price:</strong> ₱<?php echo $plantPrice; ?></p>
-                <p><strong>Location:</strong> <?php echo $plantLocation; ?></p>
-                <p><strong>Size:</strong> <?php echo $plantSize; ?></p>
-                <p><strong>Categories:</strong> <?php echo $plantCategories; ?></p>
-                <p><strong>Description:
-                    <br>
-                </strong> <?php echo $plantDescription; ?></p>
-            </div>
-        </div>
+    <h1><?php echo $plantName; ?></h1>
+    <div class="plant-details">
+        <p><strong>Price:</strong> <?php echo $plantPrice; ?> ₱</p>
+        <p><strong>Location:</strong> <?php echo $plantLocation; ?></p>
+        <p><strong>Size:</strong> <?php echo $plantSize; ?></p>
+        <p><strong>Categories:</strong> <?php echo $plantCategories; ?></p>
+        <p><strong>Description:</strong> <?php echo $plantDescription; ?></p>
+    </div>
+    <!-- View More Button -->
+    <div class="view-more-btn">View More</div>
+</div>
+
     </div>
 </div>
 
@@ -155,110 +158,125 @@ function getImagePath($sellerEmail, $img) {
     
 
     <script>
-        // Array of image paths  
-        let images = [
+        // Modal functionality
+document.addEventListener('DOMContentLoaded', function () {
+    const modal = document.getElementById('imageModal');
+    const zoomedImage = document.getElementById('zoomed-image');
+    const closeModal = document.getElementById('closeModal');
+    const prevBtn = document.getElementById('zoom-prev-btn');
+    const nextBtn = document.getElementById('zoom-next-btn');
+
+    let images = [
         '<?php echo getImagePath($sellerEmail, $img1); ?>',
         '<?php echo getImagePath($sellerEmail, $img2); ?>',
         '<?php echo getImagePath($sellerEmail, $img3); ?>'
     ];
+    let currentIndex = 0;
+
+    function showImage(index) {
+        zoomedImage.src = images[index];
+    }
+
+    prevBtn.addEventListener('click', function () {
+        currentIndex = (currentIndex === 0) ? images.length - 1 : currentIndex - 1;
+        showImage(currentIndex);
+    });
+
+    nextBtn.addEventListener('click', function () {
+        currentIndex = (currentIndex === images.length - 1) ? 0 : currentIndex + 1;
+        showImage(currentIndex);
+    });
+
+    // Close modal
+    closeModal.addEventListener('click', function () {
+        modal.style.display = "none";
+    });
+
+    // Open modal on image click
+    document.querySelector('.card-image-container img').addEventListener('click', function () {
+        modal.style.display = "flex"; // Show modal
+        showImage(currentIndex); // Show the current image
+    });
+});
+
+          // JavaScript for handling the "View More" button
+          document.addEventListener('DOMContentLoaded', function () {
+            const viewMoreBtn = document.querySelector('.view-more-btn');
+            const cardContent = document.querySelector('.card-content');
+
+            if (viewMoreBtn && cardContent) {
+                viewMoreBtn.addEventListener('click', function () {
+                    cardContent.classList.toggle('expanded');
+                    if (cardContent.classList.contains('expanded')) {
+                        viewMoreBtn.textContent = 'View Less';
+                    } else {
+                        viewMoreBtn.textContent = 'View More';
+                    }
+                });
+            }
+        });
+      $(document).ready(function() {
       
 
-        let currentImageIndex = 0;
+//     // Array of image paths
+    let images = [
+        '<?php echo getImagePath($sellerEmail, $img1); ?>',
+        '<?php echo getImagePath($sellerEmail, $img2); ?>',
+        '<?php echo getImagePath($sellerEmail, $img3); ?>'
+     ];
 
-        // Select the image element and buttons
+    let currentImageIndex = 0;
 
-        const plantImage = document.getElementById('plant-image');
-        const prevBtn = document.getElementById('prev-btn');
-        const nextBtn = document.getElementById('next-btn');
-        const modal = document.getElementById('imageModal');
-        const zoomedImage = document.getElementById('zoomed-image');
-        const closeModal = document.getElementById('closeModal');
-        const close = document.getElementById('close');
+     const plantImage = $('#plant-image');
+    const modal = $('#imageModal');
+    const zoomedImage = $('#zoomed-image');
+   const closeModal = $('#closeModal');
+   const prevBtn = $('#prev-btn');
+   const nextBtn = $('#next-btn');
+    const zoomPrevBtn = $('#zoom-prev-btn');
+    const zoomNextBtn = $('#zoom-next-btn');
 
-        // Zoom in on the image when clicked
-        plantImage.addEventListener('click', function() {
-            modal.style.display = "block";
-            zoomedImage.src = plantImage.src;
-        });
+   // Zoom in on image click
+     plantImage.on('click', function() {
+       modal.show();
+        zoomedImage.attr('src', images[currentImageIndex]);
+    });
 
-        // Close the modal without redirecting
-        closeModal.addEventListener('click', function() {
-            modal.style.display = "none";
-        });
+     // Close modal
+     closeModal.on('click', function() {
+        modal.hide();
+     });
 
-        close.addEventListener('click', function() {
-          window.location.href = 'index.php';
-        })
+    // Navigate images in the card
+     prevBtn.on('click', function() {
+        currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
+         plantImage.attr('src', images[currentImageIndex]);
+     }); 
+    
+     nextBtn.on('click', function() {
+         currentImageIndex = (currentImageIndex + 1) % images.length;
+         plantImage.attr('src', images[currentImageIndex]);
+     });
 
-       
-            // Modal Previous and Next buttons
-            const zoomPrevBtn = document.getElementById('zoom-prev-btn');
-            const zoomNextBtn = document.getElementById('zoom-next-btn');
+     // Navigate images in the zoomed modal
+     zoomPrevBtn.on('click', function() {
+         currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
+         zoomedImage.attr('src', images[currentImageIndex]);
+     });
 
-            // Navigate images in the modal
-            zoomPrevBtn.addEventListener('click', function() {
-                currentImageIndex--;
-                if (currentImageIndex < 0) {
-                    currentImageIndex = images.length - 1;
-                }
-                const imageUrl = images[currentImageIndex];
-                if (imageUrl !== 'default-image.jpg') {
-                    zoomedImage.src = imageUrl;
-                }
-            });
+     zoomNextBtn.on('click', function() {
+         currentImageIndex = (currentImageIndex + 1) % images.length;
+         zoomedImage.attr('src', images[currentImageIndex]);
+     });
 
-            zoomNextBtn.addEventListener('click', function() {
-                currentImageIndex++;
-                if (currentImageIndex >= images.length) {
-                    currentImageIndex = 0;
-                }
-                const imageUrl = images[currentImageIndex];
-                if (imageUrl !== 'default-image.jpg') {
-                    zoomedImage.src = imageUrl;
-                }
-            });
+     // Close modal when clicking outside
+    $(window).on('click', function(event) {
+        if (event.target == modal[0]) {
+            modal.hide();
+        }
+    });
+});
 
-            // Event listener for the Previous button in card view
-            prevBtn.addEventListener('click', function() {
-                currentImageIndex--;
-                if (currentImageIndex < 0) {
-                    currentImageIndex = images.length - 1;
-                }
-                const imageUrl = images[currentImageIndex];
-                if (imageUrl !== 'default-image.jpg') {
-                    plantImage.src = imageUrl;
-                }
-            });
-
-            // Event listener for the Next button in card view
-            nextBtn.addEventListener('click', function() {
-                currentImageIndex++;
-                if (currentImageIndex >= images.length) {
-                    currentImageIndex = 0;
-                }
-                const imageUrl = images[currentImageIndex];
-                if (imageUrl !== 'default-image.jpg') {
-                    plantImage.src = imageUrl;
-                }
-            });
-
-            // Error handling for image loading
-            plantImage.addEventListener('error', function() {
-                console.error('Error loading image:', plantImage.src);
-                // Handle the error, e.g. display a default image
-            });
-
-            zoomedImage.addEventListener('error', function() {
-                console.error('Error loading zoomed image:', zoomedImage.src);
-                // Handle the error, e.g. display a default image
-            });
-
-            // Close the modal when clicking outside the image
-            window.onclick = function(event) {
-                if (event.target === modal) {
-                    modal.style.display = "none";
-                }
-            }
     </script>
 </body>
 </html>

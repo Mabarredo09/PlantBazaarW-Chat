@@ -1,33 +1,38 @@
-<?php 
+<?php
 include "../conn.php";
+session_start();
 
-// Query to get each user with their latest message
+$current_user_id = $_SESSION['user_id']; // Assuming user_id is stored in session
+
+// Query to fetch users who have conversations with the current user
 $stmt = "
     SELECT users.id, users.username, messages.message AS message_preview, messages.timestamp
     FROM users
-    LEFT JOIN messages ON users.id = messages.sender_id OR users.id = messages.receiver_id
-    LEFT JOIN (
-        SELECT MAX(id) AS latest_message_id
-        FROM messages
-        GROUP BY LEAST(sender_id, receiver_id), GREATEST(sender_id, receiver_id)
-    ) AS latest_messages ON messages.id = latest_messages.latest_message_id
-    WHERE messages.id IS NOT NULL
+    JOIN messages ON users.id = messages.sender_id OR users.id = messages.receiver_id
+    WHERE (messages.sender_id = ? OR messages.receiver_id = ?)
+    GROUP BY users.id
     ORDER BY messages.timestamp DESC
 ";
-$result = mysqli_query($conn, $stmt);
+$prepared_stmt = $conn->prepare($stmt);
+$prepared_stmt->bind_param('ii', $current_user_id, $current_user_id);
+$prepared_stmt->execute();
+$result = $prepared_stmt->get_result();
 
-while ($row = mysqli_fetch_assoc($result)) {
+while ($row = $result->fetch_assoc()) {
     $id = $row['id'];
     $username = $row['username'];
-    $message_preview = $row['message_preview'] ?: "No messages yet"; // Default message if none
-    $timestamp = $row['timestamp'] ? date('g:i a', strtotime($row['timestamp'])) : ""; // Format timestamp
+    $message_preview = $row['message_preview'] ?: "No messages yet";
+    $timestamp = $row['timestamp'] ? date('g:i a', strtotime($row['timestamp'])) : "";
 
-    echo "<div class='user' id=$id data-username='$username'>
-        <h5>$username</h5>
-        <div class='message-notification'>
-            <p class='message-preview'>$message_preview</p>
-            <p class='time-stamp'>$timestamp</p>
-        </div>
-    </div>";
+    echo "<div class='user' id='$id' data-username='$username'>
+            <h5>$username</h5>
+            <div class='message-notification'>
+                <p class='message-preview'>$message_preview</p>
+                <p class='time-stamp'>$timestamp</p>
+            </div>
+          </div>";
 }
+
+$prepared_stmt->close();
+$conn->close();
 ?>

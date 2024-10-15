@@ -305,10 +305,6 @@ $(document).on('click', '.cancel-reply', function() {
     $('.reply-message').data('message-id', null); // Clear the message ID being replied to
 });
 
-
-
-
-
     send_message();
 
     // Function to display messages
@@ -398,6 +394,7 @@ let notificationAudio = new Audio('sounds/Notification-Sound.mp3');
 let unseenMessageCount = 0; // Tracks unseen messages
 let soundEnabled = true; // Enable sound notifications by default
 function fetchLatestMessages() {
+    
     $.ajax({
         url: "ajax/fetch_latest_message.php",
         method: "POST",
@@ -430,8 +427,11 @@ function fetchLatestMessages() {
             });
 
             // Mag-play ng tunog kung may unseen messages na para sa user
-            if (unseenMessageCount > 0 && soundEnabled) {
+            if (unseenMessageCount > 0 && soundEnabled || unseenMessageCount > 0) {
                 playNotificationSound();
+            }
+            else{
+                notificationAudio.pause();
             }
         },
         error: function(jqXHR, textStatus, errorThrown) {
@@ -464,13 +464,13 @@ function setupNotification() {
 // Add an event listener to enable sound after first interaction
 document.addEventListener('click', () => {
   // Your sound play logic goes here
-  playNotificationSound();
+//   playNotificationSound();
 }, { once: true }); // This ensures it only runs once
 
 
 // Set up the notification on window load
 window.onload = function() {
-    setupNotification();
+    // setupNotification();
     
     // Fetch messages immediately on load
     fetchLatestMessages();

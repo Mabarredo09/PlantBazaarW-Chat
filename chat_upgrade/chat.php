@@ -91,9 +91,10 @@ if (!$seller) {
 
             // Function to scroll to bottom
             function scrollToBottom() {
-                const chatContainer = document.getElementById('message-container');
-                chatContainer.scrollTop = chatContainer.scrollHeight;
-            }
+            var chatContainer = document.querySelector('.message-container');
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
 
             // Send message
             $('#messageForm').on('submit', function(event) {
@@ -124,8 +125,13 @@ if (!$seller) {
             });
 
             // Load messages periodically
-            setInterval(loadMessages, 2000); // Adjust interval as needed
-        });
+            setInterval(function() {
+            var selectedUserId = $('.user.selected').attr('id');
+            if (selectedUserId) {
+                display_messages(selectedUserId);
+            }
+        }, 2000); // Adjust interval as needed
+                });
     </script>
 </body>
 </html>

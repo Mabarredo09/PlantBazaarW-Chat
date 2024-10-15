@@ -54,46 +54,93 @@ if ($isLoggedIn) {
     <?php include 'nav.php'; ?>
 <div class="container">
     <!-- Categories Container -->
+    <button id="openCategoriesModal" class="categories-modal-btn">Filter Categories</button>
+
+<!-- Categories Container for Desktop -->
 <div class="categories-container">
-    <!-- Plant Type -->
-    <div class="plant-type">
-        <h3>Plant Type</h3>
-        <button class="clear-all">Clear All</button> <!-- Clear All Button -->
-        <div class="plant-type-items">
-            <label><input type="checkbox" class="category-checkbox" value="Outdoor"> Outdoor Plant</label>
-            <label><input type="checkbox" class="category-checkbox" value="Indoor"> Indoor Plant</label>
-            <label><input type="checkbox" class="category-checkbox" value="Flowers"> Flowers</label>
-            <label><input type="checkbox" class="category-checkbox" value="Leaves"> Leaves</label>
-            <label><input type="checkbox" class="category-checkbox" value="Bushes"> Bushes</label>
-            <label><input type="checkbox" class="category-checkbox" value="Trees"> Trees</label>
-            <label><input type="checkbox" class="category-checkbox" value="Climbers"> Climbers</label>
-            <label><input type="checkbox" class="category-checkbox" value="Grasses"> Grasses</label>
-            <label><input type="checkbox" class="category-checkbox" value="Succulent"> Succulent</label>
-            <label><input type="checkbox" class="category-checkbox" value="Cacti"> Cacti</label>
-            <label><input type="checkbox" class="category-checkbox" value="Aquatic"> Aquatic</label>
+        <!-- Plant Type -->
+        <div class="plant-type">
+            <h3>Plant Type</h3>
+            <button class="clear-all">Clear All</button> <!-- Clear All Button -->
+            <div class="plant-type-items">
+                <label><input type="checkbox" class="category-checkbox" value="Outdoor"> Outdoor Plant</label>
+                <label><input type="checkbox" class="category-checkbox" value="Indoor"> Indoor Plant</label>
+                <label><input type="checkbox" class="category-checkbox" value="Flowers"> Flowers</label>
+                <label><input type="checkbox" class="category-checkbox" value="Leaves"> Leaves</label>
+                <label><input type="checkbox" class="category-checkbox" value="Bushes"> Bushes</label>
+                <label><input type="checkbox" class="category-checkbox" value="Trees"> Trees</label>
+                <label><input type="checkbox" class="category-checkbox" value="Climbers"> Climbers</label>
+                <label><input type="checkbox" class="category-checkbox" value="Grasses"> Grasses</label>
+                <label><input type="checkbox" class="category-checkbox" value="Succulent"> Succulent</label>
+                <label><input type="checkbox" class="category-checkbox" value="Cacti"> Cacti</label>
+                <label><input type="checkbox" class="category-checkbox" value="Aquatic"> Aquatic</label>
+            </div>
+        </div>
+
+     <!-- Plant Size -->
+        <div class="plant-size">
+            <h3>Filter by Size</h3>
+            <button class="clear-all">Clear All</button> <!-- Clear All Button -->
+            <div class="plant-size-items">
+                <label><input type="checkbox" class="size-checkbox" value="Seedlings"> Seedlings</label>
+                <label><input type="checkbox" class="size-checkbox" value="Juvenile"> Juvenile</label>
+                <label><input type="checkbox" class="size-checkbox" value="Adult"> Adult</label>
+            </div>
+        </div>
+
+     <!-- Plant Location -->
+     <div class="plant-location">
+            <h3>Filter by Location</h3>
+            <button class="clear-all">Clear All</button> <!-- Clear All Button -->
+            <div id="locationCheckboxes"></div> <!-- Dynamic Location Checkboxes -->
         </div>
     </div>
 
-    <!-- Plant Size -->
-    <div class="plant-size">
-        <h3>Filter by Size</h3>
-        <button class="clear-all">Clear All</button> <!-- Clear All Button -->
-        <div class="plant-size-items">
-            <label><input type="checkbox" class="size-checkbox" value="Seedlings"> Seedlings</label>
-            <label><input type="checkbox" class="size-checkbox" value="Juvenile"> Juvenile</label>
-            <label><input type="checkbox" class="size-checkbox" value="Adult"> Adult</label>
-        </div>
-    </div>
+    <!-- Modal for Categories (visible on mobile view only) -->
+    <div id="categoriesModal" class="categories-modal">
+        <div class="categories-modal-content">
+            <button id="closeCategoriesModal" class="close-modal-btn">&times;</button>
 
-    <!-- Plant Location -->
-    <div class="plant-location">
-        <h3>Filter by Location</h3>
-        <button class="clear-all">Clear All</button> <!-- Clear All Button -->
-        <div id="locationCheckboxes"></div> <!-- Dynamic Location Checkboxes -->
-    </div>
+            <!-- Copy of categories for the mobile view modal -->
+            <div class="plant-type">
+                <h3>Plant Type</h3>
+                <button class="clear-all">Clear All</button>
+                <div class="plant-type-items">
+                    <label><input type="checkbox" class="category-checkbox" value="Outdoor"> Outdoor Plant</label>
+                    <label><input type="checkbox" class="category-checkbox" value="Indoor"> Indoor Plant</label>
+                    <label><input type="checkbox" class="category-checkbox" value="Flowers"> Flowers</label>
+                    <label><input type="checkbox" class="category-checkbox" value="Leaves"> Leaves</label>
+                    <label><input type="checkbox" class="category-checkbox" value="Bushes"> Bushes</label>
+                    <label><input type="checkbox" class="category-checkbox" value="Trees"> Trees</label>
+                    <label><input type="checkbox" class="category-checkbox" value="Climbers"> Climbers</label>
+                    <label><input type="checkbox" class="category-checkbox" value="Grasses"> Grasses</label>
+                    <label><input type="checkbox" class="category-checkbox" value="Succulent"> Succulent</label>
+                    <label><input type="checkbox" class="category-checkbox" value="Cacti"> Cacti</label>
+                    <label><input type="checkbox" class="category-checkbox" value="Aquatic"> Aquatic</label>
+                </div>
+            </div>
+            <!-- Plant Size -->
+        <div class="plant-size">
+            <h3>Filter by Size</h3>
+            <button class="clear-all">Clear All</button> <!-- Clear All Button -->
+            <div class="plant-size-items">
+                <label><input type="checkbox" class="size-checkbox" value="Seedlings"> Seedlings</label>
+                <label><input type="checkbox" class="size-checkbox" value="Juvenile"> Juvenile</label>
+                <label><input type="checkbox" class="size-checkbox" value="Adult"> Adult</label>
+            </div>
+        </div>
+
+        <!-- Plant Location -->
+     <div class="plant-location">
+            <h3>Filter by Location</h3>
+            <button class="clear-all">Clear All</button> <!-- Clear All Button -->
+            <div id="locationCheckboxesMobile"></div> <!-- Dynamic Location Checkboxes -->
+        </div>
+
 </div>
+</div>
+        
 
-<!-- Newly Listed Plants -->
 <!-- Newly Listed Plants -->
 <div class="listed-plants">
     <div class="sort-container">
@@ -114,7 +161,7 @@ if ($isLoggedIn) {
 $(document).ready(function () {
     // Fetch Newly Listed Plants via AJAX
     $.ajax({
-        url: 'Ajax/fetch_newly_listed.php',
+        url: 'Ajax/fetch_categories.php',
         type: 'GET',
         dataType: 'json', // Ensure response is treated as JSON
         success: function (response) {
@@ -136,9 +183,17 @@ $(document).ready(function () {
                         ${location}
                     </label><br>`
                 ).join('');
+
+                let locationCheckboxesMobileHtml = locations.map(location => 
+                    `<label>
+                        <input type="checkbox" class="location-checkbox" value="${location}">
+                        ${location}
+                    </label><br>`
+                ).join('');
                 
                 // 3. Inject the location checkboxes into the correct div
                 $('#locationCheckboxes').html(locationCheckboxesHtml);
+                $('#locationCheckboxesMobile').html(locationCheckboxesMobileHtml);
 
                 // 4. Display all plants in the content area
                 function displayPlants(plantsToDisplay) {
@@ -266,6 +321,16 @@ $(document).ready(function () {
             });
         }
     });
+    // Open modal for categories on mobile
+    $('#openCategoriesModal').on('click', function() {
+        $('#categoriesModal').addClass('show');
+    });
+
+    // Close modal when clicking close button
+    $('#closeCategoriesModal').on('click', function() {
+        $('#categoriesModal').removeClass('show');
+    });
+
 });
 
 
