@@ -316,15 +316,6 @@ button.chat-seller:hover {
     background-color: #333;
 }
 
-#searchBar {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 1.2rem;
-    margin-bottom: 20px;
-}
-
 /* Show button and modal only on small screens */
 @media (max-width: 768px) {
     .categories-container {

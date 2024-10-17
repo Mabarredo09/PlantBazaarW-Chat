@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 13, 2024 at 08:24 PM
+-- Generation Time: Oct 17, 2024 at 10:02 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -96,7 +96,40 @@ INSERT INTO `messages` (`id`, `sender_id`, `receiver_id`, `message`, `file_path`
 (587, 41, 1, 'ano balita', NULL, 584, '2024-10-12 08:47:50', 0),
 (588, 41, 1, 'asd', NULL, 585, '2024-10-12 09:27:07', 0),
 (589, 41, 1, 'bossing', NULL, 575, '2024-10-12 09:27:25', 0),
-(590, 41, 1, 'asd', NULL, NULL, '2024-10-12 09:27:35', 0);
+(590, 41, 1, 'asd', NULL, NULL, '2024-10-12 09:27:35', 0),
+(591, 41, 1, 'asd', NULL, NULL, '2024-10-15 18:34:05', 0),
+(592, 48, 41, 'JASDASDASD', NULL, NULL, '2024-10-15 18:55:45', 1),
+(593, 41, 48, 'Heello', NULL, NULL, '2024-10-15 18:56:42', 1),
+(594, 48, 41, 'asd', NULL, NULL, '2024-10-15 18:57:09', 1),
+(595, 48, 41, '', '670ebb5b8fb8b_UMID_EMV_sample.png', NULL, '2024-10-15 18:58:35', 1),
+(596, 48, 41, 'asd', NULL, NULL, '2024-10-15 19:05:19', 1),
+(597, 48, 41, 'asd', NULL, NULL, '2024-10-15 19:05:20', 1),
+(598, 41, 48, 'asd', NULL, NULL, '2024-10-16 14:34:23', 1),
+(599, 41, 1, 'asd', NULL, NULL, '2024-10-16 14:34:31', 0),
+(600, 41, 59, 'asd', NULL, NULL, '2024-10-16 14:34:34', 0),
+(601, 48, 41, 'What is up bossing?', NULL, NULL, '2024-10-16 14:36:09', 1),
+(602, 41, 48, 'Hey po', NULL, NULL, '2024-10-16 14:43:51', 1),
+(603, 48, 41, 'Musta buhay buhay', NULL, NULL, '2024-10-16 14:44:21', 1),
+(604, 41, 48, 'ok naman', NULL, NULL, '2024-10-16 14:44:31', 1),
+(605, 48, 41, 'asd', NULL, NULL, '2024-10-16 14:57:41', 1),
+(606, 48, 41, 'asdasdasdasd', NULL, NULL, '2024-10-16 15:09:06', 1),
+(607, 48, 41, '', '670fd731edc94_461875136_900319612198903_6003683218236318191_n.jpg', NULL, '2024-10-16 15:09:37', 1),
+(608, 48, 41, 'Eto pong halaman magkano?', NULL, NULL, '2024-10-16 15:10:14', 1),
+(609, 41, 48, 'Mga 1000 lang po', NULL, NULL, '2024-10-16 15:10:33', 1),
+(610, 41, 48, 'Kunin nyo po ba?', NULL, NULL, '2024-10-16 15:12:54', 1),
+(611, 48, 41, 'Opo sir san po ba pwede mag meet up?', NULL, NULL, '2024-10-16 15:15:08', 1),
+(612, 41, 48, '09+++++++++ eto po number ko contact nalang po kayo', NULL, NULL, '2024-10-16 15:16:08', 1),
+(613, 48, 41, 'ok po sir tawag nalang ako sir pag malapit nako', NULL, 612, '2024-10-16 15:16:57', 1),
+(614, 41, 48, 'Huh', NULL, NULL, '2024-10-16 17:49:58', 1),
+(615, 41, 59, 'asd', NULL, NULL, '2024-10-17 00:31:51', 0),
+(616, 41, 48, '', '67105d42c1684_1.png', NULL, '2024-10-17 00:41:38', 1),
+(617, 41, 48, '', '67105d6a9b73e_Screenshot 2024-08-17 181108.png', NULL, '2024-10-17 00:42:18', 1),
+(618, 41, 48, '', '67105d7b879ed_Screenshot 2024-08-27 205133.png', NULL, '2024-10-17 00:42:35', 1),
+(619, 41, 59, 'Hello poHello poHello poHello poHello poHello poHello poHello poHello poHello poHello poHello poHello poHello poHello poHello poHello poHello poHello poHello poHello poHello poHello poHello poHello poHello poHello poHello poHello poHello poHello poHello poHello poHello poHello poHello poHello poHello poHello po', NULL, NULL, '2024-10-17 00:48:27', 0),
+(620, 41, 48, 'wewewewewewe', NULL, NULL, '2024-10-17 00:51:42', 1),
+(621, 41, 1, 'asdasdasdasdasdasdasdasdsad', NULL, NULL, '2024-10-17 00:53:48', 0),
+(622, 41, 59, 'Eyy', NULL, NULL, '2024-10-17 14:45:51', 0),
+(623, 41, 59, 'Eyy', NULL, NULL, '2024-10-17 14:45:53', 0);
 
 -- --------------------------------------------------------
 
@@ -173,22 +206,37 @@ INSERT INTO `product_archive` (`archiveID`, `postedBy`, `postPlantName`, `img1`,
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `reports`
+--
+
+CREATE TABLE `reports` (
+  `id` int(11) NOT NULL,
+  `reporting_user` int(11) NOT NULL,
+  `reported_user` int(11) NOT NULL,
+  `report_reason` varchar(128) NOT NULL,
+  `description` text NOT NULL,
+  `description image` varchar(128) NOT NULL,
+  `report_date` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `sellers`
 --
 
 CREATE TABLE `sellers` (
   `seller_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `ratings` float NOT NULL
+  `user_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `sellers`
 --
 
-INSERT INTO `sellers` (`seller_id`, `user_id`, `ratings`) VALUES
-(2, 1, 4.8),
-(3, 41, 5);
+INSERT INTO `sellers` (`seller_id`, `user_id`) VALUES
+(2, 1),
+(3, 41);
 
 -- --------------------------------------------------------
 
@@ -303,6 +351,14 @@ ALTER TABLE `product_archive`
   ADD PRIMARY KEY (`archiveID`);
 
 --
+-- Indexes for table `reports`
+--
+ALTER TABLE `reports`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `reporting_user` (`reporting_user`,`reported_user`),
+  ADD KEY `reported_user` (`reported_user`);
+
+--
 -- Indexes for table `sellers`
 --
 ALTER TABLE `sellers`
@@ -349,7 +405,7 @@ ALTER TABLE `chats`
 -- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=591;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=624;
 
 --
 -- AUTO_INCREMENT for table `product`
@@ -362,6 +418,12 @@ ALTER TABLE `product`
 --
 ALTER TABLE `product_archive`
   MODIFY `archiveID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
+
+--
+-- AUTO_INCREMENT for table `reports`
+--
+ALTER TABLE `reports`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `sellers`
@@ -403,6 +465,13 @@ ALTER TABLE `chats`
 --
 ALTER TABLE `product`
   ADD CONSTRAINT `product_ibfk_1` FOREIGN KEY (`added_by`) REFERENCES `sellers` (`seller_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `reports`
+--
+ALTER TABLE `reports`
+  ADD CONSTRAINT `reports_ibfk_1` FOREIGN KEY (`reporting_user`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `reports_ibfk_2` FOREIGN KEY (`reported_user`) REFERENCES `users` (`id`);
 
 --
 -- Constraints for table `sellers`

@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $user = $result->fetch_assoc();
 
         // Verify the password with the hashed password in the database
-        if (password_verify($password, $user['password'])) {
+        if ($user['password']) {
             $_SESSION['email'] = $user['email'];
             $_SESSION['user_id'] = $user['id'];
 

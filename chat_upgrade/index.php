@@ -88,6 +88,28 @@ if(isset($_SESSION['email'])){
             </form>
             </div>
 
+            <!-- Modal for reporting a user -->
+            <div id="reportModal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <span class="close-modal">&times;</span>
+                    <h2>Report User</h2>
+                    <form id="reportForm">
+                        <label for="reportReason">Reason for reporting:</label>
+                        <select id="reportReason" name="reportReason" required>
+                            <option value="harassment">Harassment</option>
+                            <option value="spam">Spam</option>
+                            <option value="inappropriate_content">Inappropriate Content</option>
+                            <option value="other">Other</option>
+                        </select>
+                        <input type="hidden" id="reportedUserId" name="reportedUserId" value="">
+                        <input type="file" name="reportImage" id="" accept="image/*">
+                        <textarea id="additionalDetails" name="additionalDetails" placeholder="Additional details (optional)" rows="4"></textarea>
+                        <button type="submit">Submit Report</button>
+                    </form>
+                </div>
+            </div>
+
+
            
         </div>
      
@@ -241,7 +263,6 @@ $(document).on('click', '.ellipsis', function() {
             $('.message-form-container').css('display', 'block');
             console.log('Formatted username:', formattedUsername);
             console.log('Formatted profile picture:', profilepic);
-            console.log('style display:', $('.report-btn').style('block'));
 
             // Display messages for the selected user immediately
             display_messages(selectedUserId);
@@ -565,7 +586,47 @@ window.onload = function() {
 });
 
 
+// Open report modal when report button is clicked
+$('.report-btn').on('click', function() {
+        var reportedUserId = $('.user.selected').attr('id'); // Get the selected user's ID
+        if (reportedUserId) {
+            $('#reportedUserId').val(reportedUserId); // Set the hidden input with reported user ID
+            $('#reportModal').fadeIn(); // Show the modal
+        } else {
+            alert("Please select a user to report.");
+        }
+    });
 
+    // Close the modal when clicking on the close button
+    $('.close-modal').on('click', function() {
+        $('#reportModal').fadeOut(); // Hide the modal
+    });
+
+    // Close the modal when clicking outside the modal content
+    $(window).on('click', function(event) {
+        if (event.target.id === 'reportModal') {
+            $('#reportModal').fadeOut();
+        }
+    });
+
+    // Handle form submission
+    $('#reportForm').on('submit', function(event) {
+        event.preventDefault(); // Prevent the form from submitting normally
+
+        $.ajax({
+            url: 'ajax/report_user.php', // Backend PHP script for handling the report
+            type: 'POST',
+            data: $(this).serialize(), // Serialize the form data
+            success: function(response) {
+                alert(response); // Show success message
+                $('#reportModal').fadeOut(); // Hide the modal after submission
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+                alert("An error occurred. Please try again.");
+            }
+        });
+    });
     });
 </script>
 
