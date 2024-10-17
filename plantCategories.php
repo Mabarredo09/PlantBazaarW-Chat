@@ -151,6 +151,9 @@ if ($isLoggedIn) {
             <option value="high">Highest to Lowest</option>
         </select>
     </div>
+   <div class="search-bar-container">
+       <input type="text" id="searchBar" placeholder="Search...">
+   </div>
     <div class="newly-contents" id="newly-contents">
         <!-- Products will be loaded dynamically -->
     </div>
@@ -173,10 +176,10 @@ $(document).ready(function () {
                     return;
                 }
 
-                // 1. Group locations uniquely from plants
+                // Group locations uniquely from plants
                 let locations = [...new Set(plants.map(p => p.city))]; // Unique location names
-                
-                // 2. Create the location checkboxes dynamically
+
+                // Create location checkboxes dynamically
                 let locationCheckboxesHtml = locations.map(location => 
                     `<label>
                         <input type="checkbox" class="location-checkbox" value="${location}">
@@ -184,18 +187,10 @@ $(document).ready(function () {
                     </label><br>`
                 ).join('');
 
-                let locationCheckboxesMobileHtml = locations.map(location => 
-                    `<label>
-                        <input type="checkbox" class="location-checkbox" value="${location}">
-                        ${location}
-                    </label><br>`
-                ).join('');
-                
-                // 3. Inject the location checkboxes into the correct div
                 $('#locationCheckboxes').html(locationCheckboxesHtml);
-                $('#locationCheckboxesMobile').html(locationCheckboxesMobileHtml);
+                $('#locationCheckboxesMobile').html(locationCheckboxesHtml);
 
-                // 4. Display all plants in the content area
+                // Display all plants in the content area
                 function displayPlants(plantsToDisplay) {
                     let contentHtml = plantsToDisplay.map(product => 
                         `<div class="plant-item" data-location="${product.city}" data-category="${product.plantcategories}" data-size="${product.plantSize}" data-price="${product.price}">
@@ -217,36 +212,26 @@ $(document).ready(function () {
 
                 displayPlants(plants); // Initial display
 
-                // 5. Handle sorting
+                // Handle sorting
                 $('#sortPrice').on('change', function () {
                     let sortOrder = $(this).val();
-
-                    // Sort the plants array based on selected option
                     if (sortOrder === 'low') {
                         plants.sort((a, b) => a.price - b.price); // Lowest to highest
                     } else if (sortOrder === 'high') {
                         plants.sort((a, b) => b.price - a.price); // Highest to lowest
                     }
-
-                    // Display sorted plants while keeping the filters
                     filterPlants(); // Reapply filters to maintain filtering state
                 });
 
-                // 6. Handle checkbox change events for filtering
+                // Handle checkbox change events for filtering
                 $('.location-checkbox, .category-checkbox, .size-checkbox').on('change', filterPlants);
 
-                // 7. Clear All Button Logic
+                // Clear All Button Logic
                 $('.clear-all').on('click', function () {
-                    // Uncheck all checkboxes in their respective categories
                     $(this).closest('.plant-type').find('input[type="checkbox"]').prop('checked', false);
-                    $(this).closest('.plant-size').find('input[type="checkbox"]').prop('checked', false);
-                    $(this).closest('.plant-location').find('input[type="checkbox"]').prop('checked', false);
-                    
-                    // Reapply filter to show all plants
-                    filterPlants(); // Reapply filter after clearing
+                    filterPlants();
                 });
 
-                // Filter Plants Function
                 function filterPlants() {
                     let selectedLocations = $('.location-checkbox:checked').map(function () {
                         return $(this).val();
@@ -277,38 +262,57 @@ $(document).ready(function () {
                         filteredPlants.sort((a, b) => b.price - a.price); // Highest to lowest
                     }
 
-                    // Finally display the filtered and sorted plants
                     displayPlants(filteredPlants);
                 }
 
-                // View Details Button Event
+                // Save filter state before navigating to the details page
                 $(document).on('click', '.view-details', function () {
+                    saveFilterState();
                     let plantId = $(this).data('id');
                     let sellerEmail = $(this).data('email');
-
-                    let form = $('<form>', {
-                        action: 'viewdetails.php',
-                        method: 'GET'
-                    }).append($('<input>', {
-                        type: 'hidden',
-                        name: 'plantId',
-                        value: plantId
-                    })).append($('<input>', {
-                        type: 'hidden',
-                        name: 'sellerEmail',
-                        value: sellerEmail
-                    }));
-
-                    $('body').append(form);
-                    form.submit();
+                    window.location.href = `viewdetails.php?plantId=${plantId}&sellerEmail=${sellerEmail}`;
                 });
 
-                // Chat Seller Button Event
-                $(document).on('click', '.chat-seller', function () {
-                    let sellerEmail = $(this).data('email');
-                    window.location.href = `chat_upgrade/chat.php?seller_email=${encodeURIComponent(sellerEmail)}`;
-                });
+                function saveFilterState() {
+                    let selectedLocations = $('.location-checkbox:checked').map(function() {
+                        return $(this).val();
+                    }).get();
+                    let selectedCategories = $('.category-checkbox:checked').map(function() {
+                        return $(this).val();
+                    }).get();
+                    let selectedSizes = $('.size-checkbox:checked').map(function() {
+                        return $(this).val();
+                    }).get();
+                    let sortOrder = $('#sortPrice').val();
 
+                    sessionStorage.setItem('selectedLocations', JSON.stringify(selectedLocations));
+                    sessionStorage.setItem('selectedCategories', JSON.stringify(selectedCategories));
+                    sessionStorage.setItem('selectedSizes', JSON.stringify(selectedSizes));
+                    sessionStorage.setItem('sortOrder', sortOrder);
+                }
+
+                function reapplyFilters() {
+                    let selectedLocations = JSON.parse(sessionStorage.getItem('selectedLocations')) || [];
+                    let selectedCategories = JSON.parse(sessionStorage.getItem('selectedCategories')) || [];
+                    let selectedSizes = JSON.parse(sessionStorage.getItem('selectedSizes')) || [];
+                    let sortOrder = sessionStorage.getItem('sortOrder') || '';
+
+                    $('.location-checkbox').each(function() {
+                        $(this).prop('checked', selectedLocations.includes($(this).val()));
+                    });
+                    $('.category-checkbox').each(function() {
+                        $(this).prop('checked', selectedCategories.includes($(this).val()));
+                    });
+                    $('.size-checkbox').each(function() {
+                        $(this).prop('checked', selectedSizes.includes($(this).val()));
+                    });
+
+                    $('#sortPrice').val(sortOrder);
+                    filterPlants();
+                }
+
+                // Call reapplyFilters() when the page loads
+                reapplyFilters();
             } catch (e) {
                 console.error("Error parsing JSON:", e);
             }
@@ -321,19 +325,24 @@ $(document).ready(function () {
             });
         }
     });
+
     // Open modal for categories on mobile
     $('#openCategoriesModal').on('click', function() {
         $('#categoriesModal').addClass('show');
     });
 
-    // Close modal when clicking close button
     $('#closeCategoriesModal').on('click', function() {
         $('#categoriesModal').removeClass('show');
     });
-
 });
 
-
+// Clear session storage when user logs out or navigates away
+window.addEventListener('unload', function () {
+    sessionStorage.removeItem('selectedLocations');
+    sessionStorage.removeItem('selectedCategories');
+    sessionStorage.removeItem('selectedSizes');
+    sessionStorage.removeItem('sortOrder');
+});
 </script>
 
     

@@ -7,7 +7,7 @@ if (isset($_GET['sellerId'])) {
     $sellerId = $_GET['sellerId'];
 
     // Fetch seller's profile data
-    $sellerQuery = "SELECT u.firstname, u.lastname, u.email, u.proflepicture, u.address, s.ratings 
+    $sellerQuery = "SELECT u.firstname, u.lastname, u.email, u.proflepicture, u.address
                     FROM users u 
                     JOIN sellers s ON u.id = s.user_id 
                     WHERE s.seller_id = ?";
@@ -24,7 +24,6 @@ if (isset($_GET['sellerId'])) {
         $sellerEmail = $sellerData['email'];
         $sellerProfilePicture = $sellerData['proflepicture'];
         $sellerAddress = $sellerData['address'];
-        $sellerRatings = $sellerData['ratings'];
     } else {
         echo "Seller not found.";
         exit;
@@ -61,7 +60,6 @@ if (isset($_GET['sellerId'])) {
             <h3><?php echo htmlspecialchars($sellerFirstname . ' ' . $sellerLastname); ?></h3>
             <p><strong>Email:</strong> <?php echo htmlspecialchars($sellerEmail); ?></p>
             <p><strong>Location:</strong> <?php echo htmlspecialchars($sellerAddress); ?></p>
-            <p><strong>Ratings:</strong> <?php echo htmlspecialchars($sellerRatings); ?> / 5</p>
         </div>
         <div>
     <h3>Listings</h3>

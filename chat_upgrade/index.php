@@ -16,9 +16,11 @@ if(isset($_SESSION['email'])){
     <title>Document</title>
     <link rel="stylesheet" href="chat.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-
 </head>
 <body>
+    <?php
+    include "nav.php";
+    ?>
     <div class="container">
     <!-- para sa sounds pag send  -->
     <audio style="display: none;" id="send-sound" src="sounds/send-sound.mp3" preload="auto"></audio>
@@ -32,20 +34,33 @@ if(isset($_SESSION['email'])){
         <img id="fullscreen-image" src="" alt="Full Screen" style="max-width: 100%; max-height: 100%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
     </div>
 
+   
         <div class="user-container">
-            <h2 class="message-header" >Messages <button style="display: none;" id="refresh-btn" class="refresh-btn" >refresh</button></h2>
-            <hr>
+            <!-- Burger icon to toggle user list -->
+            <h2 class="message-header" >Chats <button style="display: none;" id="refresh-btn" class="refresh-btn" >refresh</button></h2>
             <!-- dito yung mga users -->
-            <div class="user-list"></div>
+            <div class="user-list">
+                
+            </div>
         </div>
+
+
         <div class="chat-container">
             <div class="reciepient-header">
                 <!-- static muna pero dito display ng username ng i memesage -->
+                <button id="back-btn">
+                <i class='bx bx-arrow-back'></i>
+                </button>
+                <div class="report-btn-container">
+                <img src="" class="profile-picture" alt="">
+                </div>
+                <div class="report-btn-container">
                 <h1 class="username" ></h1>
+                <button class='report-btn' id="report-btn"><i class='fas fa-flag'></i></button>
+                </div>
             </div>
             <!-- dito yung mga chats  -->
             <div class="message-container" id="message-container">
-              
 
             </div>
 
@@ -63,21 +78,20 @@ if(isset($_SESSION['email'])){
 
 
 
-
-
             <!-- pang send ng messages  -->
+            <div class="message-form-container">
             <form class="message-form" id="messageForm" enctype="multipart/form-data">
                 <i class='bx bx-image-add bx-md' id="image-upload-icon"></i>
                 <input class="message-input" type="text" name="message" id="message" placeholder="Type your message here">
                 <input type="file" id="image-upload" name="image" accept="image/*" style="display: none;">
                 <button id="send" type="submit">Send</button>
             </form>
+            </div>
 
            
         </div>
      
     </div>
-    <a href="logout.php">Logout</a>
 </body>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
@@ -99,8 +113,16 @@ $(document).on('click', '.ellipsis', function() {
     } else {
         openMessageId = null; // Reset if closed
     }
+
+   
 });
 
+ // Back button to return to user list in mobile view
+ $(document).on('click', '#back-btn', function() {
+        $('.chat-container').removeClass('show-chat');
+        $('.user-container').removeClass('hide-users');
+        console.log('Back button clicked');
+    });
 // para lumitaw sa reply-indicator 
 // Click event for reply button
 // $(document).on('click', '.reply-btn', function() {
@@ -205,18 +227,58 @@ $(document).on('click', '.ellipsis', function() {
 
             var selectedUserId = $('.user.selected').attr('id'); // This should capture the ID of the currently selected user
             var username = $(this).data('username');
+            var profilepic = $(this).data('profilepic');
             console.log('Clicked user ID:', selectedUserId);
             console.log('Clicked username:', username);
+            console.log('Clicked profile picture:', profilepic);
             // Assuming `username` is the variable with the username value
             var formattedUsername = username.charAt(0).toUpperCase() + username.slice(1);
-            $('.username').text(formattedUsername);
 
+            // Update the username and profile picture
+            $('.profile-picture').attr('src','../ProfilePictures/' + profilepic);
+            $('.username').text(formattedUsername);
+            $('.report-btn').css('display', 'block');
+            $('.message-form-container').css('display', 'block');
+            console.log('Formatted username:', formattedUsername);
+            console.log('Formatted profile picture:', profilepic);
+            console.log('style display:', $('.report-btn').style('block'));
 
             // Display messages for the selected user immediately
             display_messages(selectedUserId);
+
+            // Show chat container and hide user list in mobile view
+            if ($(window).width() < 768) {
+                $('.chat-container').addClass('show-chat');
+                $('.user-container').addClass('hide-users');
+            }
         });
     }
 
+            loadUsers();
+
+        // Load users
+        function loadUsers() {
+            $.ajax({
+                url: "ajax/fetch_user.php",
+                type: "GET",
+                success: function(data) {
+                    $(".user-list").html(data);
+                    attachClickEvent();
+                }
+            });
+        }
+
+
+    function report_user(){
+        $('.report-btn').on('click', function(event) {
+            var selectedUserId = $('.user.selected').attr('id');
+
+            if (!selectedUserId) {
+                alert("Please select a user before reporting.");
+                return;
+            }
+        })
+    }
     // Send message function
    function send_message() {
     $('#send').on('click', function(event) {
@@ -263,6 +325,7 @@ $(document).on('click', '.ellipsis', function() {
                 audio.play();
                 // Clear the reply-to data
                 $('.reply-message').hide().data('message-id', null).html('');
+                
                 scrollToBottom();
             },
             error: function(xhr, status, error) {
@@ -306,6 +369,8 @@ $(document).on('click', '.cancel-reply', function() {
 });
 
     send_message();
+
+    report_user();
 
     // Function to display messages
     let isUserAtBottom = true;
@@ -421,14 +486,13 @@ function fetchLatestMessages() {
                     // Optional: maglagay ng visual cue sa UI
                     userElement.find('.message-notification').addClass('new-message');
                     setTimeout(function() {
-                        userElement.find('.message-notification').removeClass('new-message');
+                    userElement.find('.message-notification').removeClass('new-message');
                     }, 1000);
                 }
             });
 
             // Mag-play ng tunog kung may unseen messages na para sa user
             if (unseenMessageCount > 0 && soundEnabled || unseenMessageCount > 0) {
-                playNotificationSound();
             }
             else{
                 notificationAudio.pause();

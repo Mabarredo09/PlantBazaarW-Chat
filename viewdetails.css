@@ -137,7 +137,6 @@
     width: 100%;
     background: linear-gradient(to top, white, transparent); /* Gradual fade for 'View More' */
     text-align: center;
-    padding: 1px;
     cursor: pointer;
     font-size: 18px;
     color: #4CAF50;
@@ -291,6 +290,9 @@
 }
 
 @media (max-width: 480px) {
+    .view-more-btn{
+        font-size: 10px;
+    }
     .modal-nav-btn {
         padding: 5px;
         font-size: 14px;

@@ -39,7 +39,7 @@ if (isset($_GET['plantId']) && isset($_GET['sellerEmail'])) {
         $img3 = $plant['img3'];
 
         // Fetch seller's profile data
-        $sellerQuery = "SELECT u.firstname, u.lastname, u.email, u.proflepicture, u.address, s.ratings FROM users u JOIN sellers s ON u.id = s.user_id WHERE s.seller_id = ?";
+        $sellerQuery = "SELECT u.firstname, u.lastname, u.email, u.proflepicture, u.address FROM users u JOIN sellers s ON u.id = s.user_id WHERE s.seller_id = ?";
         $sellerStmt = $conn->prepare($sellerQuery);
         $sellerStmt->bind_param("i", $sellerId);
         $sellerStmt->execute();
@@ -61,7 +61,6 @@ if (isset($_GET['plantId']) && isset($_GET['sellerEmail'])) {
             $sellerEmail = $sellerData['email'];
             $sellerProfilePicture = $sellerData['proflepicture'];
             $sellerAddress = $sellerData['address'];
-            $sellerRatings = $sellerData['ratings'];
         } else {
             echo "No data found for seller ID: " . $sellerId;
             exit;
@@ -138,7 +137,6 @@ function getImagePath($sellerEmail, $img) {
             <img src="ProfilePictures/<?php echo $sellerProfilePicture; ?>" alt="Seller Profile">
             <h3><?php echo $sellerFirstname . ' ' . $sellerLastname; ?></h3>
             <p class="small">@<?php echo $sellerData['email']; ?></p>
-            <p>Rating: <?php echo $sellerRatings;?> / 5</p>
         </div>
         <form action="profile.php" method="get">
         <input type="hidden" name="sellerId" value="<?php echo $sellerId; ?>">

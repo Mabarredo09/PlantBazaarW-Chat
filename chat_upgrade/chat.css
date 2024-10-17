@@ -1,3 +1,4 @@
+/* General Reset */
 * {
     margin: 0;
     padding: 0;
@@ -5,103 +6,218 @@
     font-family: 'Poppins', sans-serif;
 }
 
+/* Main container layout */
 .container {
     width: 100%;
     height: 100vh;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: row;
+}
+.user{
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 3px;
+    border-radius: 5px;
+    background-color: #fff;
+    display: flex;
     flex-direction: column;
+    align-items: left;
+    justify-content: space-between;
+    gap: 10px;
+    cursor: pointer;
+}
+.user:hover{
+    background-color: #f8f9fa;
+}
+.user img{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
 }
 
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+}
+
+/* User Container Styling */
 .user-container {
-    width: 100%;
-    height: 20vh;
+    width: 30%;
+    height: 100vh;
+    padding: 10px;
+    overflow-y: auto;
+    background-color: #f8f9fa;
+    border-right: 1px solid #ccc;
+}
+
+@media (max-width: 768px) {
+    .user-container {
+        width: 100%;
+        height: auto;
+        border-right: none;
+    }
+}
+
+/* Chat Container Styling */
+.chat-container {
+    width: 70%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    background-color: #fff;
+    overflow-y: auto;
+    border-left: 1px solid #ccc;
+}
+#back-btn{
+    display: none;
+}
+.report-btn-container{
     display: flex;
     flex-direction: row;
-    overflow-x: scroll;
+    justify-content: space-between;
+}
+.report-btn{
+    display: none;
+    font-size: 20px;
+    width: 50px;
+    height: 40px;
+    color: black;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
-.chat-container {
-    width: 100%;
-    height: 80vh;
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-}
-@media (min-width: 768px) {
-    .container {
-        flex-direction: row;
-    }
-
-    .user-container {
-        width: 30%;
-        height: 100vh;
-    }
-
+@media (max-width: 768px) {
     .chat-container {
-        width: 70%;
+        width: 100%;
         height: 100vh;
+        display: none;
     }
 }
 
-.message-header {
-    text-align: center;
-    padding: 20px;
-}
-
-hr {
-    width: 80%;
-    margin: 0 auto;
-    border: 1px solid #000;
-    margin-top: 10px;
-}
-
-.user {
-    border-radius: 10px;
+/* Back button for mobile */
+.back-btn {
+    display: none;
     padding: 10px;
-    margin: 10px;
+    color: #007bff;
+    cursor: pointer;
+    font-size: 24px;
+    position: absolute;
+    top: 15px;
+    left: 15px;
+}
+
+@media (max-width: 768px) {
+    .back-btn {
+        display: block;
+    }
+}
+
+/* Message Header */
+.recepient-header {
+    background-color: #007bff;
+    color: white;
+    padding: 15px;
+    font-size: 18px;
     display: flex;
-    gap: 2%;
+    align-items: center;
+    border-radius: 10px 10px 0 0;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+.profile-picture{
+    display: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+
+/* Message List */
+.message-container {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 10px;
+    display: flex;
     flex-direction: column;
-    box-shadow: 0px 4px 4px #EDEDED;
+    gap: 15px;
+    scroll-behavior: smooth;
+}
+/* For message preview in the user list */
+.message-preview {
+    font-size: 0.8rem;
+    color: #555;
+    max-height: 1.5rem; /* Limit the height of the preview */
+    overflow: hidden; /* Hide overflow text */
+    text-overflow: ellipsis; /* Add ellipsis (...) for overflow */
+    white-space: nowrap;
 }
 
-.message-notification {
-    border-radius: 10px;
+.message-item img{
+    width: 400px;
+    height: auto;
+    max-height: 400px;
+    object-fit: contain;
+    cursor: pointer;
+}
+
+.message-item {
+    position: relative;
+}
+.message-item a{
+    text-decoration: none;
+}
+
+.sent {
+    align-self: flex-end;
+    background-color: #007bff;
+    color: white;
+    border-radius: 15px 15px 0 15px;
     padding: 10px;
-    margin: 10px;
-    display: flex;
-    border: 1px solid #000;
+    max-width: 80%;
+    word-wrap: break-word;
 }
 
-.message-preview,
-.time-stamp {
-    font-size: 12px;
+.received {
+    align-self: flex-start;
+    background-color: #f1f1f1;
+    color: #333;
+    border-radius: 15px 15px 15px 0;
+    padding: 10px;
+    max-width: 80%;
+    word-wrap: break-word;
 }
 
+/* Message Form */
+.message-form-container {
+    display: none;
+}
 .message-form {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 10px;
-    width: 100%;
-    background-color: #f4f4f4;
+    padding: 15px;
+    background-color: #f8f9fa;
     border-top: 1px solid #ccc;
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
 }
 
 .message-input {
     flex-grow: 1;
     padding: 10px;
     margin-right: 10px;
-    border-radius: 10px;
+    border-radius: 15px;
     border: 1px solid #ccc;
 }
 
 #send {
     padding: 10px 20px;
-    border-radius: 10px;
+    border-radius: 15px;
     background-color: #007bff;
     color: white;
     border: none;
@@ -112,31 +228,18 @@ hr {
     background-color: #0056b3;
 }
 
-.recepient-header {
-    display: flex;
-    gap: 10px;
-    padding: 20px;
-    background-color: #FDFDFF;
-    border-radius: 10px;
-    box-shadow: 0px 4px 4px #EDEDED;
-}
-
-.message-image {
-    width: 40px;
-    height: 40px;
-}
-
+/* Fullscreen Image Overlay */
 #fullscreen-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.8); /* semi-transparent black background */
-    z-index: 9999; /* make sure it's on top of everything */
+    background: rgba(0, 0, 0, 0.8);
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 9999;
 }
 
 #fullscreen-image {
@@ -144,229 +247,114 @@ hr {
     max-height: 90%;
 }
 
-.sent {
-    background-color: #1399EC;
-    color: #fff;
-    border-radius: 10px 10px 0 10px;
-    padding: 10px;
-    margin: 10px;
-    text-align: right;
-    width: max-content;
-    float: right; /* Move to the right */
-    clear: both;
-    max-width: 50%; /* Limit message width for better readability */
-    word-wrap: break-word; /* Allow long text to wrap */
-}
-
-.received {
-    background-color: #818186;
+#close-overlay {
+    position: absolute;
+    top: 10px;
+    right: 20px;
     color: white;
-    border-radius: 0px 10px 10px 10px;
-    padding: 10px;
-    margin: 10px;
-    text-align: left;
-    width: max-content;
-    float: left; /* Keep received messages to the left */
-    clear: both;
-    max-width: 50%; /* Limit message width for better readability */
-}
-
-.message-container {
-    overflow-y: scroll;
-    height: 70%;
-    overflow-x: hidden;
-}
-
-.message-item {
-    position: relative;
-}
-
-.message-content {
-    position: relative;
-}
-
-/* Styling for the reply box */
-.replied-message {
-    margin: 10px 0; /* Add some space above and below the reply box */
-    padding: 10px; /* Add some padding inside the box */
-    border-radius: 8px; /* Rounded corners for a softer look */
-    background-color: #eeeeee; /* Grey color for the reply */
-}
-
-/* Styling for the reply text */
-.replied-text {
-    color: #555; /* Dark grey for text */
-    font-style: italic; /* Italicize the reply text for emphasis */
-}
-
-/* Styling for the reply image */
-.replied-image {
-    max-width: 100px; /* Limit the size of the image to 100px width */
-    max-height: 100px; /* Limit the height to maintain aspect ratio */
-    border-radius: 4px; /* Slight rounding on image corners */
-    display: block; /* Make the image block-level so it doesn't wrap with text */
-    margin-top: 5px; /* Add space between the text and the image */
-}
-
-.message-options {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    justify-content: center;
-    margin-top: 20px;
-}
-
-.message-image {
-    contain: content;
-    width: 100px;
-    height: 100px;
-    border-radius: 10px;
-    object-fit: cover;
-    object-position: center;
-}
-
-.reply-content {
-    display: flex;
-}
-
-.replied-message {
-    padding: 10px;
-    border-radius: 10px;
-    max-width: auto;
-    text-align: left;
-    float: right; /* Align the reply message to the right */
-    clear: both; /* Ensure proper spacing from the next message */
-    width: auto; /* Adjust width to the content */
-    word-wrap: break-word; /* Allow long text to wrap */
-}
-
-.replied-image {
-    width: 100px;
-    height: 100px;
-}
-
-.cancel-reply {
-    margin-left: auto;
-}
-
-.message-item.sent .message-options {
-    display: none;
-}
-
-.message-item.sent:hover .message-options {
-    position: absolute;
-    top: -30px;
-    right: 110%;
-    z-index: 10;
-    border-radius: 10px;
-    padding: 5px 10px;
-    background-color: rgb(231, 223, 223);
-    display: block;
-}
-
-/* Message options for received messages (aligned to the left) */
-.message-item.received .message-options {
-    display: none;
-}
-
-.message-item.received {
-    position: relative; /* Ensure parent is relative */
-}
-
-.message-item.received:hover .message-options {
-    display: block;
-    position: absolute;
-    background-color: #ddcece;
-    border-radius: 10px;
-    padding: 5px 10px;
-    top: -30px; /* Align to the top of the message */
-    left: 100%; /* Position it directly to the right of the message */
-    margin-left: 10px; /* Add some space between the message and options */
-    z-index: 10;
-}
-
-.message-options .ellipsis {
+    font-size: 30px;
     cursor: pointer;
-    color: black;
-    font-size: 18px;
-    padding: 0 10px;
 }
 
-.options-menu {
-    display: none; /* Hidden by default */
-    background-color: #fff;
-    position: absolute;
-    top: 30px; /* Position the dropdown below the ellipsis */
-    left: 0;
-    z-index: 10;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
+/* Mobile-specific styles */
+@media (max-width: 768px) {
+    .reciepient-header {
+        background-color: #f1f1f1;
+        display: flex;
+        flex-direction: row;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+    .user-container {
+        display: block;
+        width: 100%;
+        height: auto;
+        border-right: none;
+        
+    }
+    .chat-container {
+        width: 100%;
+        height: 100vh;
+        display: none;
+    }
+    .back-btn {
+        display: block;
+    }
 }
 
-.options-menu button {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    background-color: #fff;
-    border: none;
-    cursor: pointer;
-    text-align: left;
-    z-index: 10;
+/* Hide chat container on mobile until a chat is clicked */
+@media (max-width: 559px) {
+    .profile-picture{
+        display: block;
+    }
+    .reciepient-header {
+        width: 100%;
+        background-color: #f1f1f1;
+        display: flex;
+        flex-direction: row;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+    .message-item img{
+        width: 200px;
+        height: auto;
+        max-height: 300px;
+        object-fit: contain;
+        cursor: pointer;
+    }
+    #back-btn {
+        display: block;
+        font-size: 40px;
+        border-radius: 20px;
+        border:none;
+        cursor: pointer;
+    }
+    .chat-container {
+        display: none;
+        width: 100%;
+        height: 100vh;
+        max-height: 100vh;
+    }
+
+    .show-chat {
+        display: block;
+    }
+
+    .hide-users {
+        display: none;
+    }
 }
 
-.options-menu button:hover {
-    background-color: #f1f1f1;
+@media (max-width: 768px) {
+    .profile-picture{
+        display: block;
+    }
+    .reciepient-header {
+        display: flex;
+        flex-direction: row;
+    }
+    #back-btn {
+        display: block;
+        font-size: 40px;
+        border-radius: 20px;
+        border:none;
+        cursor: pointer;
+    }
+    .chat-container {
+        display: none;
+        width: 100%;
+        height: 100vh;
+        max-height: 100vh;
+    }
+
+    .show-chat {
+        display: block;
+    }
+
+    .hide-users {
+        display: none;
+    }
 }
 
-/* Show the options menu on ellipsis click */
-.message-options:hover .options-menu {
-    display: block;
-}
-
-.replied-message {
-    background-color: #eeeeee;
-    color: #000;
-    opacity: 50%;
-}
-
-.replied-text a {
-    color: blue; /* Link color */
-    text-decoration: none; /* Underline to signify it's clickable */
-    cursor: pointer; /* Show pointer cursor on hover */
-}
-
-.replied-text a:hover {
-    color: darkblue; /* Change color on hover */
-}
-
-.reply-indicator {
-    background-color: #f8f9fa; /* Light background for better visibility */
-    border: 1px solid #ced4da; /* Subtle border */
-    border-radius: 5px; /* Rounded corners */
-    padding: 10px; /* Padding for spacing */
-    margin-bottom: 10px; /* Space below the reply indicator */
-    display: flex; /* Flexbox for alignment */
-    align-items: center; /* Center items vertically */
-}
-
-.reply-message {
-    display: flex; /* Flexbox for message text and close button */
-    align-items: center; /* Center items vertically */
-    color: #343a40; /* Dark text color for readability */
-}
-
-.reply-text {
-    font-weight: 500; /* Slightly bold text */
-    color: #007bff; /* Primary color for the text */
-}
-
-.close-reply {
-    font-size: 1.2rem; /* Slightly larger size for the close icon */
-    margin-left: 10px; /* Space between text and close icon */
-    cursor: pointer; /* Pointer cursor for better UX */
-    transition: color 0.3s; /* Smooth transition for color change */
-}
-
-.close-reply:hover {
-    color: #dc3545; /* Change color on hover */
-}

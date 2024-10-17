@@ -35,7 +35,7 @@ if (isset($_GET['plantId']) && isset($_GET['sellerEmail'])) {
         $img3 = $plant['img3'];
 
         // Fetch seller's profile data
-        $sellerQuery = "SELECT u.firstname, u.lastname, u.email, u.proflepicture, u.address, s.ratings 
+        $sellerQuery = "SELECT u.firstname, u.lastname, u.email, u.proflepicture, u.address
                         FROM users u 
                         JOIN sellers s ON u.id = s.user_id 
                         WHERE s.seller_id = ?";
@@ -52,7 +52,6 @@ if (isset($_GET['plantId']) && isset($_GET['sellerEmail'])) {
             $sellerEmail = $sellerData['email'];
             $sellerProfilePicture = $sellerData['proflepicture'];
             $sellerAddress = $sellerData['address'];
-            $sellerRatings = $sellerData['ratings'];
         } else {
             echo "No data found for seller ID: " . $sellerId;
             exit;
@@ -121,24 +120,6 @@ if ($path = getImagePath($sellerEmail, $img3)) $images[] = $path;
                 </div>
             </div>
         </div>
-
-        <!-- <div class="profilerContainer">
-           
-            <div class="seller-profile">
-                <h2>Seller Profile</h2>
-                <div class="seller-info">
-                    <img src="ProfilePictures/<?php echo $sellerProfilePicture; ?>" alt="Seller Profile Picture">
-                    <h3><?php echo $sellerFirstname . ' ' . $sellerLastname; ?></h3>
-                    <p>Email: <?php echo $sellerEmail; ?></p>
-                    <p>Location: <?php echo $sellerAddress; ?></p>
-                    <p>Rating: <?php echo $sellerRatings;?> / 5</p>
-                </div>
-                <form action="profile.php" method="get">
-                    <input type="hidden" name="sellerId" value="<?php echo $sellerId; ?>">
-                    <button type="submit">View Seller Profile</button>
-                </form>
-            </div>
-        </div> -->
         
         <!-- Modal for Image Zoom -->
         <div id="imageModal" class="modal">
